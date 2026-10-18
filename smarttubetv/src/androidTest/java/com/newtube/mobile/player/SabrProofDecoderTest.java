@@ -27,7 +27,7 @@ public final class SabrProofDecoderTest {
     @Test
     public void localFixtureDecodesVideoAndAudioToBuffers() throws IOException {
         Context target = InstrumentationRegistry.getInstrumentation().getTargetContext();
-        assertEquals("io.github.aleixrodriala.arc", target.getPackageName());
+        assertEquals("io.github.tytebyte_dev.weight_app", target.getPackageName());
         byte[] data = readFixture(target);
 
         verifyAndReport(SabrProofDecoder.decode(data, true), true);

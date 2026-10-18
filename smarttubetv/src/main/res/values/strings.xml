@@ -2,8 +2,8 @@
 <resources>
     <!-- NOTE: Please don't translate this file. All strings have been moved to the common module. -->
     <!-- NEWTUBE(fdroid): stmobile overrides this, so the app never shows it; F-Droid's update bot
-         reads the name from this file (src/main), so it must say NewTube too. -->
-    <string translatable="false" name="app_name"><![CDATA[NewTube]]></string>
+         reads the name from this file (src/main), so it must say Weight App too. -->
+    <string translatable="false" name="app_name"><![CDATA[Weight App]]></string>
     <string translatable="false" name="browse_title"><![CDATA[SmartTube]]></string>
     <string name="related_movies">Related Videos</string>
     <string name="vertical_grid_title"><![CDATA[Vertical Video Grid]]></string>

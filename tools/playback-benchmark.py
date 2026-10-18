@@ -332,7 +332,7 @@ def main():
     os.umask(0o077)
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--serial', required=True)
-    parser.add_argument('--package', default='io.github.aleixrodriala.arc')
+    parser.add_argument('--package', default='io.github.tytebyte_dev.weight_app')
     parser.add_argument('--output', required=True)
     parser.add_argument('--videos', default='Fo89b8zAIE4,u_vnA6nlDvs,yi0PiY1i3XU')
     parser.add_argument('--mode', choices=['matrix', 'cold', 'switches', 'soak', 'browse'], default='matrix')

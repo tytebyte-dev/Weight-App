@@ -12,11 +12,11 @@ android {
         // Requiring API 34+ prevents that fallback on a phone with an existing account.
         minSdk = 34
         targetSdk = project.ext.targetSdkVersion
-        testApplicationId = 'io.github.aleixrodriala.arc.benchmark'
+        testApplicationId = 'io.github.tytebyte_dev.weight_app.benchmark'
         testInstrumentationRunner = 'androidx.test.runner.AndroidJUnitRunner'
         missingDimensionStrategy 'default', 'stmobile'
         testInstrumentationRunnerArguments['targetPackage'] = rootProject.file('keystore.properties').exists()
-                ? 'io.github.aleixrodriala.arc' : 'io.github.aleixrodriala.arc.debug'
+                ? 'io.github.tytebyte_dev.weight_app' : 'io.github.tytebyte_dev.weight_app.debug'
     }
 
     compileOptions {
