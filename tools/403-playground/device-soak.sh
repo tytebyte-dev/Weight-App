@@ -3,7 +3,7 @@ set -euo pipefail
 
 video_url=${1:-https://www.youtube.com/watch?v=p7YpVl35pac}
 duration=${SOAK_SECONDS:-180}
-package=io.github.aleixrodriala.arc
+package=io.github.tytebyte_dev.weight_app
 forced_client=${PLAYER_CLIENT:-}
 fresh_app_info=${FRESH_APP_INFO:-0}
 poison_once_itag=${POISON_ONCE_ITAG:-}

@@ -307,11 +307,10 @@ android {
     // flavor so its source set (src/stmobile/) keeps applying without a directory move.
     productFlavors {
         stmobile {
-            // Brand-neutral, GitHub-verifiable applicationId (io.github.<user>.*) chosen so the
-            // package name never has to change if the app is ever renamed — "arc" ties to the
-            // arch-"n" launcher mark (Catalan for "arch"). This ID is permanent once released;
-            // do not couple it to the marketing name. See docs/gtm + the legal-risk memo.
-            applicationId "io.github.aleixrodriala.arc"
+            // GitHub-verifiable applicationId (io.github.<user>.*). Android forbids hyphens in
+            // package names, so "weight-app" is written "weight_app". This ID is permanent once
+            // released; do not couple it to the marketing name.
+            applicationId "io.github.tytebyte_dev.weight_app"
             minSdk = 24 // media3 1.10.x floor is 23; 24 = project-wide minimum
             targetSdk = project.ext.targetSdkVersion
             // NewTube versions independently of upstream SmartTube (defaultConfig carries the

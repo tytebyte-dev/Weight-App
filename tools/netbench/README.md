@@ -107,7 +107,7 @@ cap), `-idle`, `-quiet`.
 ANDROID_HOME=<sdk> ./gradlew :smarttubetv:assembleStmobileBenchmark -PsideBySide
 adb -s "$NETBENCH_SERIAL" install -r smarttubetv/build/outputs/apk/stmobile/benchmark/<apk>
 ```
-It is release code with `BENCHMARK=true`, installed as `io.github.aleixrodriala.arc.check` next to
+It is release code with `BENCHMARK=true`, installed as `io.github.tytebyte_dev.weight_app.check` next to
 the normal app (the `.check` id needs release signing, `keystore.properties`; without it the build
 gets `.debug`, which appbench does not drive). appbench sets these `debug.arc.*` properties, which
 only debug and benchmark builds read at process start:

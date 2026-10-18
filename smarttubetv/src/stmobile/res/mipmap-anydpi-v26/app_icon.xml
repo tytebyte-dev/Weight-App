@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- NewTube adaptive launcher icon (API 26+), overrides @mipmap/app_icon for stmobile. -->
+<!-- Weight App adaptive launcher icon (API 26+). The artwork is a full-bleed background layer. -->
 <adaptive-icon xmlns:android="http://schemas.android.com/apk/res/android">
-    <background android:drawable="@drawable/ic_launcher_background" />
+    <background android:drawable="@drawable/ic_launcher_art" />
     <foreground android:drawable="@drawable/ic_launcher_foreground" />
-    <monochrome android:drawable="@drawable/ic_launcher_monochrome" />
 </adaptive-icon>

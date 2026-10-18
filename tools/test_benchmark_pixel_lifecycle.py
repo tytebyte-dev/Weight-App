@@ -23,7 +23,7 @@ BENCHMARK = importlib.util.module_from_spec(SPEC)
 SPEC.loader.exec_module(BENCHMARK)
 
 SERIAL = 'host-only-no-device'
-TARGET = 'io.github.aleixrodriala.arc'
+TARGET = 'io.github.tytebyte_dev.weight_app'
 APK_HASH = '7' * 64
 PROFILE = ('HSPLcom/newtube/mobile/player/Media3PlayerController;->getPositionMs()J\n'
            'Landroidx/media3/exoplayer/ExoPlayer;\n')

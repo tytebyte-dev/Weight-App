@@ -37,13 +37,13 @@ fi
 [ -z "$sb_tall" ] || reason="$reason statusBarExpanded"
 case "$mode" in
   app)
-    printf '%s' "$focus" | grep -q -E "io.github.aleixrodriala.arc.(check|auth)/" || reason="$reason focusNotCheck"
+    printf '%s' "$focus" | grep -q -E "io.github.tytebyte_dev.weight_app.(check|auth)/" || reason="$reason focusNotCheck"
     ;;
   start)
     # The launcher is whatever the phone's default home app is (not only the stock Pixel one).
     home=$(adb -s $S shell cmd package resolve-activity --brief -a android.intent.action.MAIN -c android.intent.category.HOME 2>/dev/null | tail -1 | tr -d '\r' | cut -d/ -f1)
     case "$home" in *.*) ;; *) home=com.google.android.apps.nexuslauncher ;; esac
-    if printf '%s' "$focus" | grep -q -E "io.github.aleixrodriala.arc.(check|auth)/|com.google.android.apps.nexuslauncher/|${home//./\\.}/|io.github.aleixrodriala.arc/"; then :; else reason="$reason focusDisallowed"; fi
+    if printf '%s' "$focus" | grep -q -E "io.github.tytebyte_dev.weight_app.(check|auth)/|com.google.android.apps.nexuslauncher/|${home//./\\.}/|io.github.tytebyte_dev.weight_app/"; then :; else reason="$reason focusDisallowed"; fi
     printf '%s' "$focus" | grep -q -i -E "whatsapp|dialer|incall|telecom|NotificationShade|Keyguard" && reason="$reason focusDisruptive"
     ;;
   net) ;;

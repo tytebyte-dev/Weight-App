@@ -13,15 +13,15 @@ SPEC.loader.exec_module(BENCHMARK)
 
 class BenchmarkParsersTest(unittest.TestCase):
     def test_target_uid_is_exact_not_first_prefix_match(self):
-        packages = ('package:io.github.aleixrodriala.arc.benchmark uid:10790\r\n'
-                    'package:io.github.aleixrodriala.arc.test uid:10789\r\n'
-                    'package:io.github.aleixrodriala.arc uid:10707\r\n')
-        self.assertEqual(10707, BENCHMARK.package_uid(packages, 'io.github.aleixrodriala.arc'))
+        packages = ('package:io.github.tytebyte_dev.weight_app.benchmark uid:10790\r\n'
+                    'package:io.github.tytebyte_dev.weight_app.test uid:10789\r\n'
+                    'package:io.github.tytebyte_dev.weight_app uid:10707\r\n')
+        self.assertEqual(10707, BENCHMARK.package_uid(packages, 'io.github.tytebyte_dev.weight_app'))
 
     def test_missing_target_does_not_use_test_or_other_variant(self):
-        packages = ('package:io.github.aleixrodriala.arc.test uid:10789\n'
-                    'package:io.github.aleixrodriala.arc.debug uid:10790\n')
-        self.assertIsNone(BENCHMARK.package_uid(packages, 'io.github.aleixrodriala.arc'))
+        packages = ('package:io.github.tytebyte_dev.weight_app.test uid:10789\n'
+                    'package:io.github.tytebyte_dev.weight_app.debug uid:10790\n')
+        self.assertIsNone(BENCHMARK.package_uid(packages, 'io.github.tytebyte_dev.weight_app'))
 
     def test_uid_bytes_use_final_map_not_health_summary(self):
         netstats = ('mAppUidStatsMap: OK\nother health output\n'

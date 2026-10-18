@@ -77,7 +77,7 @@ public class SabrDeliveryProofTest {
         require(expectedTransport == null || expectedTransport.equals(actualTransport), "wrong-network");
         report("network", "transport=" + actualTransport + " validated=true vpn=false");
         SessionWarmup.onPlaybackRequested();
-        require("io.github.aleixrodriala.arc".equals(InstrumentationRegistry.getInstrumentation()
+        require("io.github.tytebyte_dev.weight_app".equals(InstrumentationRegistry.getInstrumentation()
                 .getTargetContext().getPackageName()), "wrong-target-package");
         // Normal app startup does this in SplashPresenter, which headless instrumentation skips.
         // Initialize only this app's preferences; do not copy or expose persisted account data.

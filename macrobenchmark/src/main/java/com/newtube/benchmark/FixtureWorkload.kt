@@ -14,7 +14,7 @@ internal object FixtureWorkload {
     private const val ACTIVITY = "com.newtube.mobile.player.BenchmarkPlaybackActivity"
     val arguments get() = InstrumentationRegistry.getArguments()
     val packageName: String
-        get() = arguments.getString("targetPackage") ?: "io.github.aleixrodriala.arc"
+        get() = arguments.getString("targetPackage") ?: "io.github.tytebyte_dev.weight_app"
     val device: UiDevice
         get() = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
 
@@ -22,8 +22,8 @@ internal object FixtureWorkload {
         check(Build.VERSION.SDK_INT >= 34) {
             "API 34+ is required so compilation resets cannot reinstall the user's app"
         }
-        check(packageName == "io.github.aleixrodriala.arc"
-            || packageName == "io.github.aleixrodriala.arc.debug")
+        check(packageName == "io.github.tytebyte_dev.weight_app"
+            || packageName == "io.github.tytebyte_dev.weight_app.debug")
         val info = InstrumentationRegistry.getInstrumentation().context.packageManager
             .getApplicationInfo(packageName, 0)
         check(info.flags and ApplicationInfo.FLAG_DEBUGGABLE == 0) {
