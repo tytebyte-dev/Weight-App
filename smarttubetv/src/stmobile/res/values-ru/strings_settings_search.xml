@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="mobile_settings_search_hint">Поиск по настройкам</string>
+    <string name="mobile_settings_search_none">Нет настроек по запросу «%1$s»</string>
+    <string name="mobile_settings_search_kw_account">войти вход выйти выход аккаунт google гугл профиль сменить переключить</string>
+    <string name="mobile_settings_search_kw_theme">тёмная темная светлая тема ночной режим оформление внешний вид цвета</string>
+    <string name="mobile_settings_search_kw_country">страна регион</string>
+    <string name="mobile_settings_search_kw_start_screen">запуск старт открывать вкладка по умолчанию главная страница</string>
+    <string name="mobile_settings_search_kw_interface_size">масштаб зум шрифт размер текста плотность крупнее мельче</string>
+    <string name="mobile_settings_search_kw_tabs">нижняя панель разделы навигация обзор</string>
+    <string name="mobile_settings_search_kw_hidden">скрыть просмотренные фильтр предстоящие премьеры прямые эфиры трансляции</string>
+    <string name="mobile_settings_search_kw_video_menu">контекстное меню три точки долгое нажатие опции</string>
+    <string name="mobile_settings_search_kw_channels_order">подписки сортировка каналы порядок</string>
+    <string name="mobile_settings_search_kw_watch_history">пауза история инкогнито</string>
+    <string name="mobile_settings_search_kw_video_ends">автовоспроизведение повтор цикл перемешать случайный следующее видео</string>
+    <string name="mobile_settings_search_kw_background">фон фоновое воспроизведение картинка в картинке pip только аудио свернуть</string>
+    <string name="mobile_settings_search_kw_natural_voice">тон высота голоса растяжение времени хомяк бурундук</string>
+    <string name="mobile_settings_search_kw_audio_focus">звонки уведомления другие приложения прерывания</string>
+    <string name="mobile_settings_search_kw_hide_related">рекомендации похожие предложения советы</string>
+    <string name="mobile_settings_search_kw_dislikes">дизлайки return youtube dislike ryd</string>
+    <string name="mobile_settings_search_kw_quality">качество разрешение 4k 1080p 720p hd экономия трафика мобильный интернет</string>
+    <string name="mobile_settings_search_kw_loudness">громкость нормализация автогромкость тихо громко</string>
+    <string name="mobile_settings_search_kw_player_volume">тихо громко звук</string>
+    <string name="mobile_settings_search_kw_captions">субтитры cc титры</string>
+    <string name="mobile_settings_search_kw_sponsorblock">пропуск спонсоры реклама сегменты заставки</string>
+    <string name="mobile_settings_search_kw_dearrow">кликбейт заголовки названия превью миниатюры</string>
+    <string name="mobile_settings_search_kw_backup">экспорт импорт сохранить резервная копия настройки</string>
+    <string name="mobile_settings_search_kw_video_format">кодек vp9 av1 h264 avc hdr 60fps формат</string>
+    <string name="mobile_settings_search_kw_buffer">буфер буферизация кэш память</string>
+    <string name="mobile_settings_search_kw_dns">dns ipv4 ipv6 серверы</string>
+    <string name="mobile_settings_search_kw_conscrypt">ssl tls сертификаты безопасность цензура блокировка byebyedpi</string>
+    <string name="mobile_settings_search_kw_multi_profiles">профили на аккаунт свои разные</string>
+    <string name="mobile_settings_search_kw_updates">обновление версия новая релиз</string>
+    <string name="mobile_settings_search_kw_diagnostic_log">отчёт об ошибке баг логи журнал отладка</string>
+    <string name="mobile_settings_search_kw_gesture_levels">жесты яркость громкость</string>
+    <string name="mobile_settings_search_kw_gesture_seek">жесты перемотка вперёд назад пропустить</string>
+</resources>

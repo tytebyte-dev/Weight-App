@@ -1,7 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Intentionally empty: the whole Weight App icon art lives in the adaptive-icon background layer. -->
+<!-- Weight App launcher icon: two brass shop weights (a big "1" and a small one) on the background layer. Everything stays inside the 66dp adaptive-icon safe zone. -->
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt"
     android:width="108dp"
     android:height="108dp"
     android:viewportWidth="108"
-    android:viewportHeight="108" />
+    android:viewportHeight="108">
+    <path
+        android:fillColor="#47000000"
+        android:pathData="M21,82.5 A33,3.6 0 1 1 87,82.5 A33,3.6 0 1 1 21,82.5 Z" />
+    <path android:pathData="M56.4,30 A5.6,5.6 0 1 1 67.6,30 A5.6,5.6 0 1 1 56.4,30 Z M58,34 L66,34 L66,39.5 L58,39.5 Z M50,39 L74,39 Q77,39 78,42 L84,73 Q85,80 79,80 L45,80 Q39,80 40,73 L46,42 Q47,39 50,39 Z">
+        <aapt:attr name="android:fillColor">
+            <gradient
+                android:type="linear"
+                android:startX="38"
+                android:startY="0"
+                android:endX="82"
+                android:endY="0">
+                <item android:offset="0" android:color="#FFFFE08A" />
+                <item android:offset="0.45" android:color="#FFF0B429" />
+                <item android:offset="1" android:color="#FFB7791F" />
+            </gradient>
+        </aapt:attr>
+    </path>
+    <path
+        android:fillColor="#D97A4E00"
+        android:pathData="M58.5,53 L63.5,50 L63.5,70 L59.5,70 L59.5,55.5 L58.5,56.2 Z M56,70 L67,70 L67,72.6 L56,72.6 Z" />
+    <path
+        android:fillColor="#FF10233A"
+        android:pathData="M29.9,52 A5.1,5.1 0 1 1 40.1,52 A5.1,5.1 0 1 1 29.9,52 Z M31,55 L39,55 L39,58.6 L31,58.6 Z M29,58.4 L41,58.4 Q43,58.4 43.6,60.4 L47,76 Q47.6,80 44,80 L26,80 Q22.4,80 23,76 L26.4,60.4 Q27,58.4 29,58.4 Z" />
+    <path android:pathData="M31.1,52 A3.9,3.9 0 1 1 38.9,52 A3.9,3.9 0 1 1 31.1,52 Z M32.2,55 L37.8,55 L37.8,58.6 L32.2,58.6 Z M29,58.4 L41,58.4 Q43,58.4 43.6,60.4 L47,76 Q47.6,80 44,80 L26,80 Q22.4,80 23,76 L26.4,60.4 Q27,58.4 29,58.4 Z">
+        <aapt:attr name="android:fillColor">
+            <gradient
+                android:type="linear"
+                android:startX="21"
+                android:startY="0"
+                android:endX="47"
+                android:endY="0">
+                <item android:offset="0" android:color="#FFFFD166" />
+                <item android:offset="0.45" android:color="#FFE09F1F" />
+                <item android:offset="1" android:color="#FF9C6414" />
+            </gradient>
+        </aapt:attr>
+    </path>
+</vector>

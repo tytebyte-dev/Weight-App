@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="header_downloads">Загрузки</string>
+    <string name="dialog_download">Скачать</string>
+    <string name="msg_sign_in_to_save">Войдите, чтобы сохранять видео в плейлисты</string>
+    <string name="about_app">О приложении %1$s</string>
+    <string name="about_source_code">Исходный код</string>
+    <string name="about_license">Лицензия</string>
+    <string name="diagnostic_log_send">Отправить диагностический журнал</string>
+    <string name="diagnostic_log_send_desc">Для сообщений об ошибках. Содержит открытые вами видео и каналы; пароли и токены входа удаляются</string>
+    <string name="diagnostic_log_subject">Диагностический журнал %1$s %2$s</string>
+    <string name="diagnostic_log_failed">Не удалось создать диагностический журнал</string>
+    <string name="signed_in_success">Вход выполнен</string>
+    <string name="feedback_failed">Не удалось отправить это в YouTube. Повторите попытку.</string>
+    <string name="subscribed_to_channel_name">Вы подписались на канал %1$s</string>
+    <string name="unsubscribed_from_channel_name">Вы отписались от канала %1$s</string>
+    <string name="subscribe_failed">Не удалось подписаться. Повторите попытку.</string>
+    <string name="unsubscribe_failed">Не удалось отписаться. Повторите попытку.</string>
+    <string name="action_undo">Отменить</string>
+    <string name="msg_player_no_connection_retry">Нет подключения. Попытка повторится, когда связь появится, или нажмите «Воспроизвести».</string>
+    <string name="msg_player_no_connection_short">Нет подключения — повторяем попытку…</string>
+    <string name="msg_player_no_connection_tap">Нет подключения — нажмите «Воспроизвести», чтобы повторить</string>
+    <string name="auto_frame_rate_sec">%s с</string>
+    <string name="audio_shift_sec">%s с</string>
+    <string name="ui_hide_timeout_sec">%s с</string>
+    <string name="screen_dimming_timeout_min">%s мин</string>
+    <string name="msg_quality_pin_fallback">%1$s не работает — для этого видео выбрано качество «Авто»</string>
+    <string name="msg_audio_pin_fallback">Аудиодорожка не работает — для этого видео используется звук по умолчанию</string>
+    <string name="update_check_failed">Не удалось проверить обновления. Повторите попытку позже.</string>
+    <string name="playlist_name_hint">Название плейлиста</string>
+    <string name="playback_controls_repeat_pause">Повтор с паузой</string>
+    <string name="playback_controls_repeat_list">Повтор списка</string>
+    <string name="action_subscribe_off">Подписка выкл.</string>
+    <string name="action_subscribe_on">Подписка вкл.</string>
+    <string name="player_return_youtube_dislike">Счётчик дизлайков (Return YouTube Dislike)</string>
+    <string name="header_live">Прямые эфиры</string>
+    <string name="keep_finished_activities">Не закрывать завершённые activity</string>
+    <string name="disable_channels_service">Отключить службу Channels</string>
+    <string name="lb_playback_controls_closed_captioning_disable">Отключить субтитры</string>
+    <string name="lb_playback_controls_closed_captioning_enable">Включить субтитры</string>
+    <string name="premium_users_only">Только для пользователей Premium. Исправляет неполный список видеоформатов</string>
+    <string name="install_bridge">Установить мост ATV/Amazon</string>
+    <string name="fix_empty_subs_and_channels">Исправить пустые «Подписки» и «Каналы»</string>
+</resources>
