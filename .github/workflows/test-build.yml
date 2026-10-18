@@ -29,6 +29,21 @@ jobs:
           submodules: true
           persist-credentials: false
 
+      # MediaServiceCore is someone else's repository (a submodule), so the changes the app needs
+      # live in patches/ and are applied on top of the pinned commit. Safe to re-run.
+      - name: Apply MediaServiceCore patches
+        run: |
+          set -euo pipefail
+          shopt -s nullglob
+          for patch in "$GITHUB_WORKSPACE"/patches/*.patch; do
+            if git -C MediaServiceCore apply --check -R "$patch" 2>/dev/null; then
+              echo "Already applied: $(basename "$patch")"
+            else
+              git -C MediaServiceCore apply --whitespace=nowarn "$patch"
+              echo "Applied: $(basename "$patch")"
+            fi
+          done
+
       - name: Set up JDK 21
         uses: actions/setup-java@de7274f081f381c8f8158605e0321c36c376e2e6 # v6.0.1
         with:
