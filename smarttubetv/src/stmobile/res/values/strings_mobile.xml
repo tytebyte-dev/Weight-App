@@ -208,6 +208,9 @@
     <string name="mobile_signin_success">You\'re signed in!</string>
     <string name="mobile_signin_error">Couldn\'t complete sign-in. Check your connection and try again — you\'ll get a fresh code.</string>
     <string name="mobile_signin_retry_button">Try again</string>
+    <string name="mobile_signin_gms_hint">Have microG or Google Play Services? Use an account from this device \u2014 no code needed.</string>
+    <string name="mobile_signin_gms_button">Sign in with a device Google account</string>
+    <string name="mobile_signin_gms_error">Couldn\'t sign in with the device account. Allow access when asked, or use the code instead.</string>
 
     <!-- Accounts sheet (com.newtube.mobile.ui.browse.AccountsSheet) -->
     <string name="mobile_accounts_title">Accounts</string>
