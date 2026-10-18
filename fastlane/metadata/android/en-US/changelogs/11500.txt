@@ -1,0 +1,1 @@
+Swipe gestures in the player: up into fullscreen, down out of it, brightness and volume on the sides, sideways to seek (each can be turned off). Settings in 16 short pages, with a search. Fixed: fullscreen with an app language or country set.

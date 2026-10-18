@@ -1,0 +1,5 @@
+First public release.
+• Videos start sooner; a half-watched video reopens in ~0.4 s
+• Steadier on bad mobile networks: switches stalled connections, waits for the network instead of retrying in bursts
+• Snackbars with Undo, a watch page that holds still while loading, light/dark switch without stopping the video
+Full notes: github.com/aleixrodriala/newtube/releases

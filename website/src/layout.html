@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="{{lang}}">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data:; style-src 'self'; script-src 'self'; font-src 'self'; media-src 'self'; connect-src 'none'; base-uri 'none'; form-action 'none'; object-src 'none'">
+  <title>{{title}}</title>
+  <meta name="description" content="{{description}}">
+  <link rel="canonical" href="{{canonical}}">
+  <link rel="alternate" hreflang="en" href="{{alt_en}}">
+  <link rel="alternate" hreflang="es" href="{{alt_es}}">
+  <link rel="alternate" hreflang="x-default" href="{{alt_en}}">
+  <meta name="robots" content="{{robots}}">
+  <meta name="color-scheme" content="light dark">
+  <meta name="theme-color" content="#f4f5f6" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#0d0e12" media="(prefers-color-scheme: dark)">
+  <link rel="icon" href="/assets/icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="NewTube">
+  <meta property="og:locale" content="{{og_locale}}">
+  <meta property="og:locale:alternate" content="{{og_locale_alt}}">
+  <meta property="og:url" content="{{canonical}}">
+  <meta property="og:title" content="{{og_title}}">
+  <meta property="og:description" content="{{description}}">
+  <meta property="og:image" content="https://newtube.org/assets/{{t.og_image}}">
+  <meta property="og:image:width" content="1280">
+  <meta property="og:image:height" content="640">
+  <meta property="og:image:alt" content="{{og_image_alt}}">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <link rel="preload" href="/assets/fonts/roboto-flex-display.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/styles.css">
+  <script src="/main.js" defer></script>
+  {{jsonld}}
+</head>
+<body class="page-{{page}}">
+  <a class="skip" href="#main">{{t.skip}}</a>
+
+  <svg class="sprite" aria-hidden="true" focusable="false">
+    <symbol id="i-down" viewBox="0 0 24 24"><path d="M12 4.5v11m-4.75-4.75L12 15.5l4.75-4.75M5.5 19.5h13"/></symbol>
+    <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h13.5m-5.25-5.25L18.5 12l-5.25 5.25"/></symbol>
+    <symbol id="i-copy" viewBox="0 0 24 24"><rect x="8.5" y="8.5" width="11" height="11" rx="2.25"/><path d="M15.5 8.5v-2a2 2 0 0 0-2-2h-7a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h2"/></symbol>
+    <symbol id="i-star" viewBox="0 0 24 24"><path class="fill" d="M12 3.3l2.55 5.47 6 .72-4.43 4.1 1.17 5.92L12 16.56l-5.29 2.95 1.17-5.92-4.43-4.1 6-.72z"/></symbol>
+    <symbol id="i-github" viewBox="0 0 16 16"><path class="fill" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></symbol>
+  </svg>
+
+  <header class="site-header">
+    <div class="wrap bar">
+      <a class="brand" href="{{home_href}}"><img src="/assets/icon.svg" width="28" height="28" alt=""><span>NewTube</span></a>
+      <nav class="nav" aria-label="{{t.nav_label}}">
+        <ul>
+          <li><a href="{{download_href}}"{{cur_download}}>{{t.nav_download}}</a></li>
+          <li><a href="{{trust_href}}"{{cur_trust}}>{{t.nav_trust}}</a></li>
+          <li><a href="{{faq_href}}"{{cur_faq}}>{{t.nav_faq}}</a></li>
+        </ul>
+      </nav>
+      <a class="lang" href="{{switch_href}}" hreflang="{{switch_lang}}" lang="{{switch_lang}}" title="{{switch_title}}">{{switch_label}}</a>
+      <a class="gh" href="https://github.com/aleixrodriala/newtube"><svg aria-hidden="true"><use href="#i-github"/></svg><span class="visually-hidden">{{t.github_label}}</span><span class="gh-stars" data-stars="{{stars}}"><svg class="i fill" aria-hidden="true"><use href="#i-star"/></svg>{{stars}}<span class="visually-hidden"> {{t.stars_label}}</span></span></a>
+    </div>
+  </header>
+
+  <main id="main">
+{{body}}
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap foot">
+      <div class="foot-brand">
+        <a class="brand" href="{{home_href}}"><img src="/assets/icon.svg" width="28" height="28" alt=""><span>NewTube</span></a>
+        <p>{{t.footer_tagline}}</p>
+      </div>
+      <nav aria-label="{{t.footer_nav_label}}">
+        <ul class="foot-links">
+          <li><a href="{{download_href}}">{{t.nav_download}}</a></li>
+          <li><a href="{{trust_href}}">{{t.nav_trust}}</a></li>
+          <li><a href="{{faq_href}}">{{t.nav_faq}}</a></li>
+          <li><a href="https://github.com/aleixrodriala/newtube">{{t.footer_source}}</a></li>
+          <li><a href="https://github.com/aleixrodriala/newtube/releases">{{t.footer_releases}}</a></li>
+          <li><a href="https://github.com/aleixrodriala/newtube/blob/main/PRIVACY.md">{{t.footer_privacy}}</a></li>
+          <li><a href="https://github.com/aleixrodriala/newtube/issues">{{t.footer_issues}}</a></li>
+          <li><a href="https://discord.gg/xu3v6euSHq">Discord</a></li>
+          <li><a href="https://github.com/yuliskov/SmartTube">{{t.footer_smarttube}}</a></li>
+          <li><a href="{{switch_href}}" hreflang="{{switch_lang}}" lang="{{switch_lang}}">{{t.switch_name}}</a></li>
+        </ul>
+      </nav>
+    </div>
+    <div class="wrap fine">
+      <p>{{t.disclaimer}}</p>
+      <p>{{t.credits}}</p>
+    </div>
+  </footer>
+</body>
+</html>

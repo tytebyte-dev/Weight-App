@@ -1,0 +1,5 @@
+• Write comments and replies when signed in; delete your own
+• Chapters: shown on the seek bar, with a list to jump between them
+• Press and hold the video for 2x speed
+• A thinner, easier-to-grab seek bar, with short vibrations on likes, Subscribe and chapter marks
+Full notes: github.com/aleixrodriala/newtube/releases

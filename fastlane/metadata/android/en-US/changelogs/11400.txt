@@ -1,0 +1,5 @@
+• The seek bar follows your finger and reaches 0:00 from the edge
+• Drags you can feel: minimize, swipe away and pull to refresh click when they commit
+• Star and Share rows in Settings → About
+• Fixed: long channel tab names stay on one line
+Full notes: github.com/aleixrodriala/newtube/releases

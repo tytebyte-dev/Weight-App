@@ -1,0 +1,29 @@
+NewTube is an unofficial YouTube client for Android phones and tablets, built on SmartTube, the Android TV client by yuliskov. It keeps SmartTube's engine and adds a touch interface in plain Material Design, its own Media3 player and offline saving.
+
+<b>Your account, in seconds</b>
+Sign in with a code, the way a TV does: Google's own page opens, you allow access, and you're back. Your subscriptions, history, playlists, Watch later and recommendations load from your account. It doesn't need microG, GmsCore, root or a patched app. Signing in is optional.
+
+<b>Keeps playing</b>
+Background playback with the screen off, picture-in-picture, and a mini-player you can drag down while you keep browsing. Lock-screen and headset controls work too.
+
+<b>Save for offline</b>
+Pick a quality up to 1080p, or keep only the audio. Saved videos play in the same player with no connection.
+
+<b>Less noise</b>
+SponsorBlock skips sponsor segments, DeArrow swaps clickbait titles and thumbnails, and Return YouTube Dislike shows estimated dislike counts. There are no Shorts anywhere in the app.
+
+<b>Works with SmartTube on your TV</b>
+Pair with SmartTube on the TV using its Remote control code, play straight to a Chromecast from the phone (no live streams or subtitles in that mode), or use the TV's own YouTube app.
+
+<b>Also</b>
+• Up to 4K where the video and the phone allow (1080p by default)
+• Subtitles, including auto-translated tracks
+• Playback speed from 0.25x to 2x
+• Playlists, queue, several accounts
+• Read comments and live chat; chapters and dubbed audio tracks
+• Picture-in-picture on Android 8 and later
+• No analytics, no crash reporting, no ad SDKs. MIT licensed.
+
+SponsorBlock and DeArrow data © their contributors, CC BY-NC-SA 4.0.
+
+NewTube is an independent project. It is not affiliated with, sponsored or endorsed by Google, YouTube, or SmartTube's developer. YouTube and Android are trademarks of Google LLC.

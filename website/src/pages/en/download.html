@@ -1,0 +1,78 @@
+<!--meta {
+  "title": "Download NewTube for Android",
+  "description": "Download the NewTube APK for Android 7.0 or newer: which file to pick, how to install it, how updates work, and how to check the file."
+} -->
+    <section class="page-head">
+      <div class="wrap">
+        <p class="kicker">Android 7.0 or newer · free · MIT</p>
+        <h1>Download NewTube.</h1>
+        <p class="lead">NewTube comes as an APK from GitHub, not from Google Play. The first file is the one for most phones.</p>
+      </div>
+    </section>
+
+    <section class="block" aria-labelledby="pick-title">
+      <div class="wrap">
+        <h2 id="pick-title" class="visually-hidden">Pick a file</h2>
+        <div class="apk-main">
+          <div>
+            <p class="apk-for">For almost every phone from the last eight years or so</p>
+            <p class="apk-name"><code>{{apk_name_arm64_v8a}}</code></p>
+          </div>
+          <a class="btn" href="{{apk_url_arm64_v8a}}">
+            <svg class="i" aria-hidden="true"><use href="#i-down"/></svg>Download APK<span class="btn-size">{{apk_size_arm64_v8a}}</span>
+          </a>
+        </div>
+        <ul class="apk-list" aria-label="Other files">
+          <li><a href="{{apk_url_armeabi_v7a}}"><code>armeabi-v7a</code><span>Older 32-bit phones</span><span class="sz">{{apk_size_armeabi_v7a}}</span></a></li>
+          <li><a href="{{apk_url_universal}}"><code>universal</code><span>Not sure which? This one works on any ARM phone, but it's bigger.</span><span class="sz">{{apk_size_universal}}</span></a></li>
+          <li><a href="{{apk_url_x86}}"><code>x86</code><span>Older x86 devices and emulators</span><span class="sz">{{apk_size_x86}}</span></a></li>
+        </ul>
+        <p class="get-meta"><span class="rl">{{release_line}}</span><a href="https://github.com/aleixrodriala/newtube/releases">All releases, checksums and release notes</a></p>
+      </div>
+    </section>
+
+    <section class="block" aria-labelledby="install-title">
+      <div class="wrap two">
+        <h2 id="install-title">Install</h2>
+        <div class="prose">
+          <ol class="steps">
+            <li>Download the file on your phone and open it.</li>
+            <li>If Android asks, let your browser or file manager install unknown apps, then tap <strong>Install</strong>.</li>
+            <li>Open NewTube. Signing in is optional; <a href="{{faq_href}}#sign-in">here's how it works</a>.</li>
+          </ol>
+          <p>NewTube has its own package name, <code>io.github.aleixrodriala.arc</code>, so it installs next to the YouTube app and SmartTube, and none of them can update the others.</p>
+          <p>Google Play Protect may offer to scan the app, as it does for any app from outside Google Play. On Samsung phones, Auto Blocker (<em>Settings › Security and privacy › Auto Blocker</em>) stops installs from anywhere but the Galaxy Store and Google Play while it is on.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="block" aria-labelledby="updates-title">
+      <div class="wrap two">
+        <h2 id="updates-title">Updates</h2>
+        <div class="prose">
+          <p><strong>In the app.</strong> NewTube checks its GitHub releases for a new version and offers it. Android installs it over the old one and keeps your account and settings.</p>
+          <p><strong>With Obtainium.</strong> In <a href="https://obtainium.imranr.dev">Obtainium</a>, choose <em>Add app</em> and paste:</p>
+          <div class="copy">
+            <code id="repo-url">https://github.com/aleixrodriala/newtube</code>
+            <button class="copy-btn" type="button" data-copy="repo-url" hidden><svg class="i" aria-hidden="true"><use href="#i-copy"/></svg><span>Copy</span></button>
+          </div>
+          <p><strong>By hand.</strong> Install a newer APK over the old one. Every release is signed with the same key.</p>
+          <p class="quiet">NewTube isn't on F-Droid or Google Play.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="block" aria-labelledby="check-title">
+      <div class="wrap two">
+        <h2 id="check-title">Check the file</h2>
+        <div class="prose">
+          <p>Since 1.10.3, every APK is built by GitHub Actions from the tagged source, and all of them are signed with the same key. The certificate's SHA-256 is:</p>
+          <div class="copy">
+            <code id="cert-sha" class="hash">2e:f9:9d:76:ed:fa:d9:88:ad:17:cd:ee:8b:a1:8c:63:4e:23:0f:e1:e3:cb:1f:dc:6c:db:02:49:37:0a:36:c9</code>
+            <button class="copy-btn" type="button" data-copy="cert-sha" hidden><svg class="i" aria-hidden="true"><use href="#i-copy"/></svg><span>Copy</span></button>
+          </div>
+          <p><a href="{{trust_href}}#build">How to check the signature, the build and the checksum</a></p>
+        </div>
+      </div>
+      <p class="visually-hidden" role="status" aria-live="polite" data-copy-status></p>
+    </section>

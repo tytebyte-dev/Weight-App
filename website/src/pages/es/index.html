@@ -1,0 +1,146 @@
+<!--meta {
+  "title": "NewTube: SmartTube para móviles, no oficial",
+  "og_title": "NewTube: SmartTube para móviles (no oficial)",
+  "description": "Lo que te encanta de SmartTube, ahora en tu móvil. NewTube es un cliente de YouTube no oficial y de código abierto para Android, basado en SmartTube de @yuliskov: abre rápido, los vídeos arrancan enseguida, aguanta en redes malas y está cuidado hasta el último gesto.",
+  "jsonld": true
+} -->
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="wrap hero-grid">
+        <div class="hero-text">
+          <p class="kicker">No oficial · código abierto · Android 7+</p>
+          <h1 id="hero-title">SmartTube para móviles.</h1>
+          <p class="lead">Lo que te encanta de SmartTube, ahora en tu móvil: abre rápido, los vídeos arrancan enseguida y todo está cuidado hasta el último gesto. Basado en <a href="https://github.com/yuliskov/SmartTube">SmartTube</a> de <a href="https://github.com/yuliskov">@yuliskov</a>.</p>
+          <div class="get">
+            <a class="btn" href="{{apk_url}}">
+              <svg class="i" aria-hidden="true"><use href="#i-down"/></svg>Descargar APK<span class="btn-size">{{apk_size}}</span>
+            </a>
+            <p class="get-meta"><span class="rl">{{release_line}}</span>Gratis · MIT · no hace falta Google Play</p>
+            <p class="get-more">
+              <a href="{{download_href}}">Otros APK y ayuda para instalar</a>
+              <a href="{{trust_href}}">¿Es seguro?</a>
+            </p>
+          </div>
+        </div>
+        <figure class="hero-phone">
+          <picture>
+            <source media="(prefers-color-scheme: dark)" srcset="/assets/screens/watch-360.webp 360w, /assets/screens/watch-720.webp 720w" sizes="(min-width: 900px) 330px, 260px">
+            <img src="/assets/screens/light-720.webp" srcset="/assets/screens/light-360.webp 360w, /assets/screens/light-720.webp 720w" sizes="(min-width: 900px) 330px, 260px" width="720" height="1616" alt="La página de un vídeo en NewTube con Sintel en reproducción, los capítulos en la barra de progreso, la fila de comentarios y A continuación" fetchpriority="high">
+          </picture>
+        </figure>
+      </div>
+    </section>
+
+    <section class="speed" id="speed" aria-labelledby="speed-title">
+      <div class="wrap">
+        <h2 id="speed-title">Rápido donde se nota.</h2>
+        <p class="section-lead">Cronometrado en un móvil real, del toque a la imagen. Con datos móviles, el primer fotograma de un vídeo relacionado llegó en 0,53 s, casi lo mismo que con Wi-Fi.</p>
+        <ul class="stats">
+          <li><p class="stat"><span class="n">0,24</span> s</p><p class="stat-label">del icono a la primera pantalla</p></li>
+          <li><p class="stat"><span class="n">0,50</span> s</p><p class="stat-label">de tocar un vídeo relacionado a su primer fotograma</p></li>
+          <li><p class="stat"><span class="n">0,66</span> s</p><p class="stat-label">de un enlace compartido al primer fotograma</p></li>
+          <li><p class="stat"><span class="n">0,37</span> s</p><p class="stat-label">para retomar un vídeo a medias donde lo dejaste</p></li>
+        </ul>
+        <p class="quiet">Medianas con Wi-Fi salvo que se indique otra cosa, en un Pixel 9 en septiembre de 2026, con las compilaciones que acabaron siendo la 1.10.1: muestras pequeñas, un solo móvil, un solo operador. <a href="{{trust_href}}#speed">Datos móviles y la tabla completa</a></p>
+      </div>
+    </section>
+
+
+    <section class="demo" id="features" aria-labelledby="demo-title">
+      <div class="wrap">
+        <h2 id="demo-title">Cada detalle, pensado.</h2>
+        <div class="demo-grid" data-demo>
+          <div class="device">
+            <video data-demo-video src="/assets/video/demo.mp4" poster="/assets/video/demo-poster.webp" width="540" height="1212" muted loop playsinline preload="none"
+                   aria-label="Un clip corto de NewTube: la búsqueda, un canal, la página de un vídeo, los comentarios, un salto en la barra, guardar para ver sin conexión, el minirreproductor, la reproducción fuera de la app y los vídeos guardados"></video>
+            <button class="play" type="button" data-demo-toggle aria-pressed="false">Reproducir</button>
+          </div>
+          <ol class="chapters">
+            <li><button type="button" data-start="0" data-end="4.62">
+              <span class="ts">0:00</span><span class="ch">Buscar</span>
+              <span class="cd">Encuentra un canal, una lista o un vídeo. Los Shorts no aparecen en ninguna lista.</span>
+              <span class="ch-bar" aria-hidden="true"><i></i></span></button></li>
+            <li><button type="button" data-start="4.62" data-end="11.08">
+              <span class="ts">0:04</span><span class="ch">Canales</span>
+              <span class="cd">Las secciones de un canal, una pestaña cada una.</span>
+              <span class="ch-bar" aria-hidden="true"><i></i></span></button></li>
+            <li><button type="button" data-start="11.08" data-end="15.54">
+              <span class="ts">0:11</span><span class="ch">Ver</span>
+              <span class="cd">El vídeo crece desde la tarjeta que tocaste, con sus capítulos en la barra de progreso.</span>
+              <span class="ch-bar" aria-hidden="true"><i></i></span></button></li>
+            <li><button type="button" data-start="15.54" data-end="19.24">
+              <span class="ts">0:15</span><span class="ch">Comentarios</span>
+              <span class="cd">Se abren bajo el vídeo mientras sigue reproduciéndose. Con la sesión iniciada, puedes escribir y responder.</span>
+              <span class="ch-bar" aria-hidden="true"><i></i></span></button></li>
+            <li><button type="button" data-start="19.24" data-end="25.61">
+              <span class="ts">0:19</span><span class="ch">Saltar</span>
+              <span class="cd">El punto se mueve tanto como tu dedo, y el nombre del capítulo lo sigue.</span>
+              <span class="ch-bar" aria-hidden="true"><i></i></span></button></li>
+            <li><button type="button" data-start="25.61" data-end="29.47">
+              <span class="ts">0:25</span><span class="ch">Guardar sin conexión</span>
+              <span class="cd">Elige una calidad, hasta 1080p, o solo el audio.</span>
+              <span class="ch-bar" aria-hidden="true"><i></i></span></button></li>
+            <li><button type="button" data-start="29.47" data-end="35.7">
+              <span class="ts">0:29</span><span class="ch">Minirreproductor</span>
+              <span class="cd">Atrás minimiza el vídeo al minirreproductor y puedes seguir navegando.</span>
+              <span class="ch-bar" aria-hidden="true"><i></i></span></button></li>
+            <li><button type="button" data-start="35.7" data-end="40.39">
+              <span class="ts">0:35</span><span class="ch">Sigue sonando</span>
+              <span class="cd">Sal de la app y el vídeo continúa, con sus controles en la notificación.</span>
+              <span class="ch-bar" aria-hidden="true"><i></i></span></button></li>
+            <li><button type="button" data-start="40.39" data-end="43.83">
+              <span class="ts">0:40</span><span class="ch">Guardados</span>
+              <span class="cd">Los vídeos guardados esperan en su propia pestaña y se ven en el mismo reproductor.</span>
+              <span class="ch-bar" aria-hidden="true"><i></i></span></button></li>
+          </ol>
+        </div>
+        <ul class="also" aria-label="También en NewTube">
+          <li>Sigue sonando con la pantalla apagada</li>
+          <li>Guarda vídeos para verlos sin conexión, hasta 1080p o solo el audio</li>
+          <li>Imagen en imagen</li>
+          <li>Capítulos y pistas de audio dobladas</li>
+          <li>Subtítulos, también traducidos automáticamente</li>
+          <li>Hasta 4K si el vídeo y el móvil lo permiten</li>
+          <li>SponsorBlock</li>
+          <li>DeArrow y recuentos estimados de «No me gusta», si los quieres</li>
+          <li>Envía a SmartTube en tu TV</li>
+          <li>Tema claro y oscuro</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="signin" id="account" aria-labelledby="signin-title">
+      <div class="wrap signin-grid">
+        <div>
+          <h2 id="signin-title">Tu cuenta, con un código.</h2>
+          <p>NewTube inicia sesión igual que una TV. Te muestra un código corto, lo apruebas en la propia página de Google y aparecen tus suscripciones, tu historial y tus listas. Tu contraseña nunca pasa por la app, y no hacen falta Google Play Services, microG ni root.</p>
+          <p class="quiet">Iniciar sesión es opcional. <a href="{{faq_href}}#sign-in">Cómo funciona</a></p>
+        </div>
+        <p class="code" aria-hidden="true"><span>LQJ</span><span>ZRQ</span><span>CBVV</span></p>
+      </div>
+    </section>
+
+    <section class="trust-sum" aria-labelledby="trust-title">
+      <div class="wrap">
+        <h2 id="trust-title">Compruébalo tú.</h2>
+        <ul class="facts">
+          <li><h3>Código abierto</h3><p>El código de NewTube está en GitHub con licencia MIT, como SmartTube, y cada versión está etiquetada.</p></li>
+          <li><h3>Compilaciones públicas</h3><p>Desde la 1.10.3, GitHub Actions compila y firma cada versión desde su etiqueta, con una atestación de compilación para cada APK.</p></li>
+          <li><h3>Sin telemetría</h3><p>Sin analíticas, sin informes de errores, sin SDK de anuncios. No se envía nada al desarrollador.</p></li>
+        </ul>
+        <p class="more"><a href="{{trust_href}}">Cómo comprobar cada punto <svg class="i" aria-hidden="true"><use href="#i-arrow"/></svg></a></p>
+      </div>
+    </section>
+
+    <section class="end" aria-labelledby="end-title">
+      <div class="wrap">
+        <img class="end-icon" src="/assets/icon.svg" width="76" height="76" alt="">
+        <h2 id="end-title">Pruébalo en tu móvil.</h2>
+        <div class="get">
+          <a class="btn" href="{{apk_url}}">
+            <svg class="i" aria-hidden="true"><use href="#i-down"/></svg>Descargar APK<span class="btn-size">{{apk_size}}</span>
+          </a>
+          <p class="get-meta"><span class="rl">{{release_line}}</span>Gratis · MIT · no hace falta Google Play</p>
+          <p class="get-more"><a href="{{download_href}}">Todos los APK, Obtainium y actualizaciones</a></p>
+        </div>
+      </div>
+    </section>

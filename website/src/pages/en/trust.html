@@ -1,0 +1,113 @@
+<!--meta {
+  "title": "Is NewTube safe? Trust and verification",
+  "description": "Who makes NewTube, how its APKs are built and signed, what the app sends where, and how to check each of these yourself."
+} -->
+    <section class="page-head">
+      <div class="wrap">
+        <p class="kicker">Trust</p>
+        <h1>Is it safe? Check it yourself.</h1>
+        <p class="lead">You install NewTube from outside Google Play, so you should be able to verify what you install. Each claim on this page points to something you can check.</p>
+      </div>
+    </section>
+
+    <section class="block" id="who" aria-labelledby="who-title">
+      <div class="wrap two">
+        <h2 id="who-title">Who makes it</h2>
+        <div class="prose">
+          <p>NewTube is one person's project: <a href="https://github.com/aleixrodriala">@aleixrodriala</a> maintains it and uses it every day. It is built on <a href="https://github.com/yuliskov/SmartTube">SmartTube</a> by <a href="https://github.com/yuliskov">@yuliskov</a> and its contributors. It is independent and unofficial: not affiliated with Google, YouTube or SmartTube's developer.</p>
+          <p id="ai"><strong>Made with AI.</strong> Most of NewTube's own code (the phone interface, the player and the network work) was written with AI coding assistants, Claude and Codex, and the commit trailers say so. The maintainer directs and reviews that work. Each <a href="https://github.com/aleixrodriala/newtube/tree/main/docs/releases">release record</a> lists what was checked on a real phone, what was checked only with automated tests, and what is still open.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="block" id="build" aria-labelledby="build-title">
+      <div class="wrap two">
+        <h2 id="build-title">How it's built and signed</h2>
+        <div class="prose">
+          <p>Since 1.10.3, the <a href="https://github.com/aleixrodriala/newtube/blob/main/.github/workflows/release.yml">release workflow</a> builds and signs every APK on GitHub's servers from the tagged source. It deletes the key from the build machine afterwards, refuses any APK signed with another certificate, and attaches the files to a draft release that the maintainer publishes by hand. Up to 1.10.2, the APKs were built on the maintainer's computer. The builds aren't reproducible yet.</p>
+          <p>Every APK is signed with the same key (<code>CN=NewTube, OU=NewTube, O=aleixrodriala</code>). Its certificate's SHA-256:</p>
+          <div class="copy">
+            <code id="cert-sha" class="hash">2e:f9:9d:76:ed:fa:d9:88:ad:17:cd:ee:8b:a1:8c:63:4e:23:0f:e1:e3:cb:1f:dc:6c:db:02:49:37:0a:36:c9</code>
+            <button class="copy-btn" type="button" data-copy="cert-sha" hidden><svg class="i" aria-hidden="true"><use href="#i-copy"/></svg><span>Copy</span></button>
+          </div>
+          <dl class="checks">
+            <dt>The signature</dt><dd><code>apksigner verify --print-certs &lt;file&gt;.apk</code></dd>
+            <dt>Where it was built</dt><dd><code>gh attestation verify &lt;file&gt;.apk -R aleixrodriala/newtube</code></dd>
+            <dt>The file itself</dt><dd>Compare its SHA-256 with <code>SHA256SUMS</code> on the release page.</dd>
+          </dl>
+        </div>
+      </div>
+      <p class="visually-hidden" role="status" aria-live="polite" data-copy-status></p>
+    </section>
+
+    <section class="block" id="virustotal" aria-labelledby="vt-title">
+      <div class="wrap two">
+        <h2 id="vt-title">VirusTotal</h2>
+        <div class="prose">
+          <p>When a release is published, a <a href="https://github.com/aleixrodriala/newtube/blob/main/.github/workflows/virustotal_scan.yml">workflow</a> uploads each APK to VirusTotal and adds the results, with a link to each report, to the release notes. For <a href="https://github.com/aleixrodriala/newtube/releases/tag/v1.14.0">1.14.0</a> (1 October 2026), none of the 64 to 67 engines flagged any of the four APKs.</p>
+          <p class="quiet">A clean scan means no antivirus engine recognised the file as malware. It is not a security audit.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="block" id="data" aria-labelledby="data-title">
+      <div class="wrap two">
+        <h2 id="data-title">What the app sends, and where</h2>
+        <div class="prose">
+          <div class="table-scroll">
+            <table class="flows">
+              <thead><tr><th scope="col">Service</th><th scope="col">What it gets</th><th scope="col">When</th></tr></thead>
+              <tbody>
+                <tr><th scope="row">YouTube and Google</th><td>Your requests for videos, search and your account</td><td>Always; your account only if you sign in</td></tr>
+                <tr><th scope="row">SponsorBlock</th><td>The ID of the video you open</td><td>On by default; you can switch it off</td></tr>
+                <tr><th scope="row">DeArrow</th><td>Video IDs, to fetch clearer titles and thumbnails</td><td>Only if you switch it on</td></tr>
+                <tr><th scope="row">Return YouTube Dislike</th><td>The ID of the video you open</td><td>Only if you switch on dislike counts</td></tr>
+                <tr><th scope="row">GitHub</th><td>A check for a newer version</td><td>Update checks</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p>Nothing goes to the developer. The app has no analytics, no crash reporting and no ad SDKs: its <a href="https://github.com/aleixrodriala/newtube/blob/main/smarttubetv/build.gradle">dependencies</a> include none, and the APK's code contains no Firebase, Crashlytics, Sentry, ACRA, Google Play Services or ad-network classes. Details are in the <a href="https://github.com/aleixrodriala/newtube/blob/main/PRIVACY.md">privacy policy</a>.</p>
+          <p>If you sign in, the login token is stored on your phone and never sent to the developer; backups you turn on (Android's own, or the app's Backup &amp; restore) can include it. You can revoke it at any time at <a href="https://myaccount.google.com/security">myaccount.google.com/security</a>, under <em>Your connections to third-party apps &amp; services</em>.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="block" id="updater" aria-labelledby="updater-title">
+      <div class="wrap two">
+        <h2 id="updater-title">How the updater checks an update</h2>
+        <div class="prose">
+          <p>It reads the update manifest from NewTube's GitHub releases over HTTPS and downloads the APK from the same release. Before offering it, it <a href="https://github.com/aleixrodriala/SharedModules/blob/master/appupdatechecker2/src/main/java/com/liskovsoft/appupdatechecker2/AppUpdateChecker.java">checks</a> that the file is a complete Android package for NewTube at the announced version. Then it hands the file to Android's own installer, which refuses an update that isn't signed with the same key as the installed app.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="block" id="source" aria-labelledby="source-title">
+      <div class="wrap two">
+        <h2 id="source-title">The source</h2>
+        <div class="prose">
+          <p>NewTube's code is public under the <a href="https://github.com/aleixrodriala/newtube/blob/main/LICENSE">MIT license</a>, the same as SmartTube: <a href="https://github.com/aleixrodriala/newtube">the app</a> and its forks of SmartTube's <a href="https://github.com/aleixrodriala/MediaServiceCore">MediaServiceCore</a> and <a href="https://github.com/aleixrodriala/SharedModules">SharedModules</a>. The libraries it uses keep their own licenses, listed in <a href="https://github.com/aleixrodriala/newtube/blob/main/THIRD_PARTY_NOTICES.md">THIRD_PARTY_NOTICES.md</a>. Every release is tagged, so you can read the exact source it was built from.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="block" id="speed" aria-labelledby="speed-title">
+      <div class="wrap two">
+        <h2 id="speed-title">How fast, measured</h2>
+        <div class="prose">
+          <p>Medians from a Pixel 9, timed on 25 and 26 September 2026 with release builds of the code that became 1.10.1, 2 to 8 runs per cell: small samples, one phone, one carrier, and the mobile-data runs were on different days. Later versions haven't been re-timed this way, and 1.12.0 changed how the app opens (Home shows loading placeholders first). The method and the full table are in <a href="https://github.com/aleixrodriala/newtube/blob/main/docs/mobile-port/STATUS.md">STATUS.md</a>.</p>
+          <div class="table-scroll">
+            <table class="nums">
+              <thead><tr><th scope="col"><span class="visually-hidden">Action</span></th><th scope="col">Wi-Fi</th><th scope="col">Mobile data</th></tr></thead>
+              <tbody>
+                <tr><th scope="row">Open the app → first screen</th><td>0.24 s</td><td>0.24 s</td></tr>
+                <tr><th scope="row">Open the app → Home fully painted</th><td>1.35 s</td><td>1.56 s</td></tr>
+                <tr><th scope="row">Tap a related video → first frame</th><td>0.50 s</td><td>0.53 s</td></tr>
+                <tr><th scope="row">Tap a related video → picture visible</th><td>0.66 s</td><td>0.73 s</td></tr>
+                <tr><th scope="row">Reopen a half-watched video → picture</th><td>0.37 s</td><td><span aria-label="not measured">–</span></td></tr>
+                <tr><th scope="row">Tap a shared link → first frame</th><td>0.66 s</td><td>0.84 s</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>

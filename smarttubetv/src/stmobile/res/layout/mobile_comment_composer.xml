@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  NEWTUBE(write-comments): the composer (CommentComposer), a dialog docked above the keyboard:
+  the person's avatar, the text (up to 6 lines, then it scrolls), and Post. While a post is on its
+  way the arrow gives way to a small spinner.
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/comment_composer_root"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_comment_composer"
+    android:gravity="bottom"
+    android:orientation="horizontal"
+    android:paddingStart="12dp"
+    android:paddingTop="10dp"
+    android:paddingEnd="4dp"
+    android:paddingBottom="6dp">
+
+    <ImageView
+        android:id="@+id/comment_composer_avatar"
+        android:layout_width="28dp"
+        android:layout_height="28dp"
+        android:layout_marginBottom="10dp"
+        android:contentDescription="@null"
+        android:importantForAccessibility="no"
+        android:src="@drawable/ic_watch_channel_placeholder" />
+
+    <EditText
+        android:id="@+id/comment_composer_input"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:layout_weight="1"
+        android:background="@null"
+        android:hint="@string/mobile_comments_add_hint"
+        android:imeOptions="flagNoExtractUi"
+        android:importantForAutofill="no"
+        android:inputType="textCapSentences|textMultiLine"
+        android:maxLines="6"
+        android:minHeight="48dp"
+        android:paddingTop="12dp"
+        android:paddingBottom="12dp"
+        android:scrollbars="vertical"
+        android:textColor="@color/mobile_color_on_surface"
+        android:textColorHint="@color/mobile_color_on_surface_secondary"
+        android:textSize="15sp" />
+
+    <FrameLayout
+        android:layout_width="48dp"
+        android:layout_height="48dp">
+
+        <ImageButton
+            android:id="@+id/comment_composer_send"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/mobile_comments_post"
+            android:padding="12dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_comment_send" />
+
+        <com.google.android.material.progressindicator.CircularProgressIndicator
+            android:id="@+id/comment_composer_progress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:indeterminate="true"
+            android:visibility="gone"
+            app:indicatorColor="@color/mobile_color_on_surface"
+            app:indicatorSize="20dp"
+            app:trackThickness="2dp" />
+
+    </FrameLayout>
+
+</LinearLayout>

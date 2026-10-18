@@ -1,0 +1,2 @@
+• Settings → About → Send diagnostic log: shares the app's recent log as a text file, with passwords, sign-in tokens, cookies, e-mail addresses and IP addresses removed first. Nothing leaves the phone until you pick an app to share it with.
+• Sign-in secrets and live-chat messages are no longer written to the system log.

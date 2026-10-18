@@ -1,0 +1,146 @@
+<!--meta {
+  "title": "NewTube: unofficial SmartTube for phones",
+  "og_title": "NewTube: SmartTube for phones (unofficial)",
+  "description": "What you love about SmartTube, now on your phone. NewTube is an unofficial, open-source YouTube client for Android, built on SmartTube by @yuliskov: fast to open, quick to play, holds up on bad networks, and polished down to the last swipe.",
+  "jsonld": true
+} -->
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="wrap hero-grid">
+        <div class="hero-text">
+          <p class="kicker">Unofficial · open source · Android 7+</p>
+          <h1 id="hero-title">SmartTube for phones.</h1>
+          <p class="lead">What you love about SmartTube, now on your phone: fast to open, quick to play, and polished down to the last swipe. Built on <a href="https://github.com/yuliskov/SmartTube">SmartTube</a> by <a href="https://github.com/yuliskov">@yuliskov</a>.</p>
+          <div class="get">
+            <a class="btn" href="{{apk_url}}">
+              <svg class="i" aria-hidden="true"><use href="#i-down"/></svg>Download APK<span class="btn-size">{{apk_size}}</span>
+            </a>
+            <p class="get-meta"><span class="rl">{{release_line}}</span>Free · MIT · no Google Play needed</p>
+            <p class="get-more">
+              <a href="{{download_href}}">Other APKs and install help</a>
+              <a href="{{trust_href}}">Is it safe?</a>
+            </p>
+          </div>
+        </div>
+        <figure class="hero-phone">
+          <picture>
+            <source media="(prefers-color-scheme: dark)" srcset="/assets/screens/watch-360.webp 360w, /assets/screens/watch-720.webp 720w" sizes="(min-width: 900px) 330px, 260px">
+            <img src="/assets/screens/light-720.webp" srcset="/assets/screens/light-360.webp 360w, /assets/screens/light-720.webp 720w" sizes="(min-width: 900px) 330px, 260px" width="720" height="1616" alt="NewTube's watch page playing Sintel, with chapters on the seek bar, the comments row and Up next" fetchpriority="high">
+          </picture>
+        </figure>
+      </div>
+    </section>
+
+    <section class="speed" id="speed" aria-labelledby="speed-title">
+      <div class="wrap">
+        <h2 id="speed-title">Fast where you feel it.</h2>
+        <p class="section-lead">Timed on a real phone, from the tap to the picture. On mobile data, a related video's first frame came in 0.53 s, nearly the same as on Wi-Fi.</p>
+        <ul class="stats">
+          <li><p class="stat"><span class="n">0.24</span> s</p><p class="stat-label">from the icon to the first screen</p></li>
+          <li><p class="stat"><span class="n">0.50</span> s</p><p class="stat-label">from tapping a related video to its first frame</p></li>
+          <li><p class="stat"><span class="n">0.66</span> s</p><p class="stat-label">from a shared link to the first frame</p></li>
+          <li><p class="stat"><span class="n">0.37</span> s</p><p class="stat-label">to pick up a half-watched video where you left it</p></li>
+        </ul>
+        <p class="quiet">Medians over Wi-Fi unless noted, from a Pixel 9 in September 2026, on the builds that became 1.10.1: small samples, one phone, one carrier. <a href="{{trust_href}}#speed">Mobile data and the full table</a></p>
+      </div>
+    </section>
+
+
+    <section class="demo" id="features" aria-labelledby="demo-title">
+      <div class="wrap">
+        <h2 id="demo-title">Every detail, thought through.</h2>
+        <div class="demo-grid" data-demo>
+          <div class="device">
+            <video data-demo-video src="/assets/video/demo.mp4" poster="/assets/video/demo-poster.webp" width="540" height="1212" muted loop playsinline preload="none"
+                   aria-label="A short clip of NewTube: search, a channel, the watch page, comments, a seek, saving for offline, the mini-player, playing on outside the app and the saved videos"></video>
+            <button class="play" type="button" data-demo-toggle aria-pressed="false">Play</button>
+          </div>
+          <ol class="chapters">
+            <li><button type="button" data-start="0" data-end="4.62">
+              <span class="ts">0:00</span><span class="ch">Search</span>
+              <span class="cd">Find a channel, a playlist or a video. Shorts stay out of every list.</span>
+              <span class="ch-bar" aria-hidden="true"><i></i></span></button></li>
+            <li><button type="button" data-start="4.62" data-end="11.08">
+              <span class="ts">0:04</span><span class="ch">Channels</span>
+              <span class="cd">A channel's sections, one tab each.</span>
+              <span class="ch-bar" aria-hidden="true"><i></i></span></button></li>
+            <li><button type="button" data-start="11.08" data-end="15.54">
+              <span class="ts">0:11</span><span class="ch">Watch</span>
+              <span class="cd">The video grows out of the card you tapped, with its chapters on the seek bar.</span>
+              <span class="ch-bar" aria-hidden="true"><i></i></span></button></li>
+            <li><button type="button" data-start="15.54" data-end="19.24">
+              <span class="ts">0:15</span><span class="ch">Comments</span>
+              <span class="cd">They open under the video while it keeps playing. Signed in, you can write and reply.</span>
+              <span class="ch-bar" aria-hidden="true"><i></i></span></button></li>
+            <li><button type="button" data-start="19.24" data-end="25.61">
+              <span class="ts">0:19</span><span class="ch">Seek</span>
+              <span class="cd">The dot moves as far as your finger does, and the chapter name follows it.</span>
+              <span class="ch-bar" aria-hidden="true"><i></i></span></button></li>
+            <li><button type="button" data-start="25.61" data-end="29.47">
+              <span class="ts">0:25</span><span class="ch">Save for offline</span>
+              <span class="cd">Pick a quality, up to 1080p, or just the audio.</span>
+              <span class="ch-bar" aria-hidden="true"><i></i></span></button></li>
+            <li><button type="button" data-start="29.47" data-end="35.7">
+              <span class="ts">0:29</span><span class="ch">Mini-player</span>
+              <span class="cd">Back folds the video into the mini-player, so you can keep browsing.</span>
+              <span class="ch-bar" aria-hidden="true"><i></i></span></button></li>
+            <li><button type="button" data-start="35.7" data-end="40.39">
+              <span class="ts">0:35</span><span class="ch">Keeps playing</span>
+              <span class="cd">Leave the app and it plays on, with its controls in the notification.</span>
+              <span class="ch-bar" aria-hidden="true"><i></i></span></button></li>
+            <li><button type="button" data-start="40.39" data-end="43.83">
+              <span class="ts">0:40</span><span class="ch">Saved</span>
+              <span class="cd">Saved videos wait in their own tab and play in the same player.</span>
+              <span class="ch-bar" aria-hidden="true"><i></i></span></button></li>
+          </ol>
+        </div>
+        <ul class="also" aria-label="Also in NewTube">
+          <li>Plays with the screen off</li>
+          <li>Saves videos for offline, up to 1080p or audio only</li>
+          <li>Picture-in-picture</li>
+          <li>Chapters and dubbed audio tracks</li>
+          <li>Subtitles, auto-translated too</li>
+          <li>Up to 4K where the video and phone allow</li>
+          <li>SponsorBlock</li>
+          <li>DeArrow and estimated dislike counts, if you want them</li>
+          <li>Casts to SmartTube on your TV</li>
+          <li>Light and dark</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="signin" id="account" aria-labelledby="signin-title">
+      <div class="wrap signin-grid">
+        <div>
+          <h2 id="signin-title">Your account, with a code.</h2>
+          <p>NewTube signs in the way a TV does. It shows a short code, you approve it on Google's own page, and your subscriptions, history and playlists appear. Your password never touches the app, and it needs no Google Play Services, microG or root.</p>
+          <p class="quiet">Signing in is optional. <a href="{{faq_href}}#sign-in">How sign-in works</a></p>
+        </div>
+        <p class="code" aria-hidden="true"><span>LQJ</span><span>ZRQ</span><span>CBVV</span></p>
+      </div>
+    </section>
+
+    <section class="trust-sum" aria-labelledby="trust-title">
+      <div class="wrap">
+        <h2 id="trust-title">Check it yourself.</h2>
+        <ul class="facts">
+          <li><h3>Open source</h3><p>NewTube's code is on GitHub under the MIT license, like SmartTube, and every release is tagged.</p></li>
+          <li><h3>Built in the open</h3><p>Since 1.10.3, GitHub Actions builds and signs each release from its tag, with a build attestation for every APK.</p></li>
+          <li><h3>No telemetry</h3><p>No analytics, no crash reporting, no ad SDKs. Nothing is sent to the developer.</p></li>
+        </ul>
+        <p class="more"><a href="{{trust_href}}">How to check each of these <svg class="i" aria-hidden="true"><use href="#i-arrow"/></svg></a></p>
+      </div>
+    </section>
+
+    <section class="end" aria-labelledby="end-title">
+      <div class="wrap">
+        <img class="end-icon" src="/assets/icon.svg" width="76" height="76" alt="">
+        <h2 id="end-title">Try it on your phone.</h2>
+        <div class="get">
+          <a class="btn" href="{{apk_url}}">
+            <svg class="i" aria-hidden="true"><use href="#i-down"/></svg>Download APK<span class="btn-size">{{apk_size}}</span>
+          </a>
+          <p class="get-meta"><span class="rl">{{release_line}}</span>Free · MIT · no Google Play needed</p>
+          <p class="get-more"><a href="{{download_href}}">All APKs, Obtainium and updates</a></p>
+        </div>
+      </div>
+    </section>

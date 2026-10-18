@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- A group title inside a settings page. -->
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/settings_header_title"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:accessibilityHeading="true"
+    android:fontFamily="sans-serif-medium"
+    android:paddingStart="@dimen/mobile_settings_row_inset"
+    android:paddingTop="20dp"
+    android:paddingEnd="@dimen/mobile_settings_row_inset"
+    android:paddingBottom="4dp"
+    android:textColor="@color/mobile_color_on_surface"
+    android:textSize="@dimen/mobile_settings_header_size"
+    tools:text="Network" />

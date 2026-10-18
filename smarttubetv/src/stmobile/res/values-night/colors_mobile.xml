@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- NEWTUBE(theme): the dark palette - exactly the values the app shipped before the Theme
+         setting, moved here from values/ (which now holds the light ones). Only the colours that
+         differ between the themes are listed; see values/colors_mobile.xml for what they're for. -->
+    <color name="mobile_color_cast_active">#4FC3F7</color>
+    <color name="mobile_color_background">#0F0F0F</color>
+    <color name="mobile_color_surface">#1E1E1E</color>
+    <color name="mobile_color_on_surface">#FFFFFF</color>
+    <color name="mobile_color_on_surface_secondary">#B3FFFFFF</color>
+    <color name="mobile_color_placeholder">#2A2A2A</color>
+    <!-- NEWTUBE(motion): the light that sweeps over skeleton blocks (ShimmerLinearLayout). -->
+    <color name="mobile_color_skeleton_highlight">#3D3D3D</color>
+    <color name="mobile_color_link">#4FC3F7</color>
+    <color name="mobile_color_divider">#22FFFFFF</color>
+    <color name="mobile_color_pill">#26FFFFFF</color>
+    <color name="mobile_color_subscribed_button">#333333</color>
+    <color name="mobile_color_comment_parent">#1A1A1A</color>
+    <color name="mobile_color_comment_creator_pill">#24FFFFFF</color>
+    <color name="mobile_color_menu_surface">#2A2A2A</color>
+    <color name="mobile_color_comment_handle">#D1FFFFFF</color>
+
+    <!-- Tokens added with the light theme; each is what that spot used before it. -->
+    <color name="mobile_color_card">#1E1E1E</color>
+    <color name="mobile_color_inverse_surface">#FFFFFF</color>
+    <color name="mobile_color_on_inverse_surface">#000000</color>
+    <color name="mobile_color_inverse_ripple">#33000000</color>
+    <color name="mobile_color_track">#33FFFFFF</color>
+    <color name="mobile_color_field">#0F0F0F</color>
+    <color name="mobile_color_background_scrim">#660F0F0F</color>
+    <color name="mobile_color_navigation_bar">#0F0F0F</color>
+
+    <!-- The shared edit dialogs keep the library's AppDialog colours (sharedutils / common). -->
+    <color name="dialog_bg_color">#101010</color>
+    <color name="dialog_text_color">#a1a1a6</color>
+    <color name="dialog_hint_color">#33FFFFFF</color>
+    <color name="dialog_proxy_hint_color">#80FFFFFF</color>
+</resources>

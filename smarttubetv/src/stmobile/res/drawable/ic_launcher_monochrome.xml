@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Themed-icon (API 33+) monochrome layer: the NewTube arch mark as a single
+     silhouette the launcher tints. Same geometry as the foreground. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <path
+        android:fillColor="#FFFFFF"
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="5"
+        android:strokeLineJoin="round"
+        android:strokeLineCap="round"
+        android:pathData="M32,76 L32,53 A22,22 0 0 1 76,53 L76,76 L63,76 L63,53 A9,9 0 0 0 45,53 L45,76 Z" />
+</vector>

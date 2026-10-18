@@ -1,0 +1,113 @@
+<!--meta {
+  "title": "¿Es seguro NewTube? Confianza y verificación",
+  "description": "Quién hace NewTube, cómo se compilan y firman sus APK, qué envía la app y a dónde, y cómo comprobar cada cosa por tu cuenta."
+} -->
+    <section class="page-head">
+      <div class="wrap">
+        <p class="kicker">Seguridad</p>
+        <h1>¿Es seguro? Compruébalo tú.</h1>
+        <p class="lead">NewTube se instala desde fuera de Google Play, así que deberías poder verificar lo que instalas. Cada afirmación de esta página apunta a algo que puedes comprobar.</p>
+      </div>
+    </section>
+
+    <section class="block" id="who" aria-labelledby="who-title">
+      <div class="wrap two">
+        <h2 id="who-title">Quién lo hace</h2>
+        <div class="prose">
+          <p>NewTube es el proyecto de una sola persona: <a href="https://github.com/aleixrodriala">@aleixrodriala</a> lo mantiene y lo usa a diario. Está basado en <a href="https://github.com/yuliskov/SmartTube">SmartTube</a>, de <a href="https://github.com/yuliskov">@yuliskov</a> y sus colaboradores. Es independiente y no oficial: no está afiliado a Google, YouTube ni al desarrollador de SmartTube.</p>
+          <p id="ai"><strong>Hecho con IA.</strong> La mayor parte del código propio de NewTube (la interfaz del móvil, el reproductor y la parte de red) se escribió con asistentes de programación con IA, Claude y Codex, y los commits lo indican. El responsable dirige y revisa ese trabajo. Cada <a href="https://github.com/aleixrodriala/newtube/tree/main/docs/releases">registro de versión</a> (en inglés) indica qué se comprobó en un móvil real, qué solo se comprobó con pruebas automáticas y qué sigue pendiente.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="block" id="build" aria-labelledby="build-title">
+      <div class="wrap two">
+        <h2 id="build-title">Cómo se compila y se firma</h2>
+        <div class="prose">
+          <p>Desde la 1.10.3, el <a href="https://github.com/aleixrodriala/newtube/blob/main/.github/workflows/release.yml">flujo de publicación</a> compila y firma cada APK en los servidores de GitHub a partir del código etiquetado. Después borra la clave de la máquina de compilación, rechaza cualquier APK firmado con otro certificado y sube los archivos a un borrador de versión que el responsable publica a mano. Hasta la 1.10.2, los APK se compilaban en el ordenador del responsable. Las compilaciones aún no son reproducibles.</p>
+          <p>Todos los APK están firmados con la misma clave (<code>CN=NewTube, OU=NewTube, O=aleixrodriala</code>). El SHA-256 de su certificado:</p>
+          <div class="copy">
+            <code id="cert-sha" class="hash">2e:f9:9d:76:ed:fa:d9:88:ad:17:cd:ee:8b:a1:8c:63:4e:23:0f:e1:e3:cb:1f:dc:6c:db:02:49:37:0a:36:c9</code>
+            <button class="copy-btn" type="button" data-copy="cert-sha" hidden><svg class="i" aria-hidden="true"><use href="#i-copy"/></svg><span>Copiar</span></button>
+          </div>
+          <dl class="checks">
+            <dt>La firma</dt><dd><code>apksigner verify --print-certs &lt;archivo&gt;.apk</code></dd>
+            <dt>Dónde se compiló</dt><dd><code>gh attestation verify &lt;archivo&gt;.apk -R aleixrodriala/newtube</code></dd>
+            <dt>El archivo</dt><dd>Compara su SHA-256 con <code>SHA256SUMS</code> en la página de la versión.</dd>
+          </dl>
+        </div>
+      </div>
+      <p class="visually-hidden" role="status" aria-live="polite" data-copy-status></p>
+    </section>
+
+    <section class="block" id="virustotal" aria-labelledby="vt-title">
+      <div class="wrap two">
+        <h2 id="vt-title">VirusTotal</h2>
+        <div class="prose">
+          <p>Al publicar una versión, un <a href="https://github.com/aleixrodriala/newtube/blob/main/.github/workflows/virustotal_scan.yml">flujo automático</a> sube cada APK a VirusTotal y añade los resultados a las notas de la versión, con un enlace a cada informe. En la <a href="https://github.com/aleixrodriala/newtube/releases/tag/v1.14.0">1.14.0</a> (1 de octubre de 2026), ninguno de los motores (entre 64 y 67, según el archivo) detectó nada en los cuatro APK.</p>
+          <p class="quiet">Un análisis limpio significa que ningún antivirus reconoció el archivo como malware. No es una auditoría de seguridad.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="block" id="data" aria-labelledby="data-title">
+      <div class="wrap two">
+        <h2 id="data-title">Qué envía la app, y a dónde</h2>
+        <div class="prose">
+          <div class="table-scroll">
+            <table class="flows">
+              <thead><tr><th scope="col">Servicio</th><th scope="col">Qué recibe</th><th scope="col">Cuándo</th></tr></thead>
+              <tbody>
+                <tr><th scope="row">YouTube y Google</th><td>Tus peticiones de vídeos y búsquedas, y tu cuenta</td><td>Siempre; tu cuenta, solo si inicias sesión</td></tr>
+                <tr><th scope="row">SponsorBlock</th><td>El ID del vídeo que abres</td><td>Activado por defecto; puedes desactivarlo</td></tr>
+                <tr><th scope="row">DeArrow</th><td>IDs de vídeos, para traer títulos y miniaturas más claros</td><td>Solo si lo activas</td></tr>
+                <tr><th scope="row">Return YouTube Dislike</th><td>El ID del vídeo que abres</td><td>Solo si activas el recuento de «No me gusta»</td></tr>
+                <tr><th scope="row">GitHub</th><td>Una consulta de si hay versión nueva</td><td>Al buscar actualizaciones</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p>Al desarrollador no le llega nada. La app no tiene analíticas, ni informes de errores, ni SDK de anuncios: sus <a href="https://github.com/aleixrodriala/newtube/blob/main/smarttubetv/build.gradle">dependencias</a> no incluyen ninguno, y el código del APK no contiene clases de Firebase, Crashlytics, Sentry, ACRA, Google Play Services ni de redes de anuncios. Los detalles están en la <a href="https://github.com/aleixrodriala/newtube/blob/main/PRIVACY.md">política de privacidad</a> (en inglés).</p>
+          <p>Si inicias sesión, el token se guarda en tu móvil y nunca se envía al desarrollador; las copias de seguridad que actives (las de Android o la Copia de seguridad/restaurar de la app) pueden incluirlo. Puedes revocarlo cuando quieras en <a href="https://myaccount.google.com/security">myaccount.google.com/security</a>, en <em>Tus conexiones con aplicaciones y servicios de terceros</em>.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="block" id="updater" aria-labelledby="updater-title">
+      <div class="wrap two">
+        <h2 id="updater-title">Cómo comprueba el actualizador una versión</h2>
+        <div class="prose">
+          <p>Lee el manifiesto de actualización de las versiones de NewTube en GitHub por HTTPS y descarga el APK de esa misma versión. Antes de ofrecerlo, <a href="https://github.com/aleixrodriala/SharedModules/blob/master/appupdatechecker2/src/main/java/com/liskovsoft/appupdatechecker2/AppUpdateChecker.java">comprueba</a> que el archivo es un paquete Android completo de NewTube con la versión anunciada. Después se lo pasa al instalador de Android, que rechaza cualquier actualización que no esté firmada con la misma clave que la app instalada.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="block" id="source" aria-labelledby="source-title">
+      <div class="wrap two">
+        <h2 id="source-title">El código</h2>
+        <div class="prose">
+          <p>El código de NewTube es público con <a href="https://github.com/aleixrodriala/newtube/blob/main/LICENSE">licencia MIT</a>, la misma que SmartTube: <a href="https://github.com/aleixrodriala/newtube">la app</a> y sus forks de <a href="https://github.com/aleixrodriala/MediaServiceCore">MediaServiceCore</a> y <a href="https://github.com/aleixrodriala/SharedModules">SharedModules</a> de SmartTube. Las bibliotecas que usa conservan sus propias licencias, recogidas en <a href="https://github.com/aleixrodriala/newtube/blob/main/THIRD_PARTY_NOTICES.md">THIRD_PARTY_NOTICES.md</a>. Cada versión está etiquetada, así que puedes leer el código exacto con el que se compiló.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="block" id="speed" aria-labelledby="speed-title">
+      <div class="wrap two">
+        <h2 id="speed-title">Cuánto tarda, medido</h2>
+        <div class="prose">
+          <p>Medianas en un Pixel 9, cronometradas el 25 y el 26 de septiembre de 2026 con compilaciones release del código que acabó siendo la 1.10.1, de 2 a 8 pruebas por celda: muestras pequeñas, un solo móvil, un solo operador, y las pruebas con datos móviles se hicieron en días distintos. Las versiones posteriores aún no se han vuelto a cronometrar así, y la 1.12.0 cambió cómo se abre la app (Inicio muestra primero tarjetas de carga). El método y la tabla completa están en <a href="https://github.com/aleixrodriala/newtube/blob/main/docs/mobile-port/STATUS.md">STATUS.md</a> (en inglés).</p>
+          <div class="table-scroll">
+            <table class="nums">
+              <thead><tr><th scope="col"><span class="visually-hidden">Acción</span></th><th scope="col">Wi-Fi</th><th scope="col">Datos móviles</th></tr></thead>
+              <tbody>
+                <tr><th scope="row">Abrir la app → primera pantalla</th><td>0,24 s</td><td>0,24 s</td></tr>
+                <tr><th scope="row">Abrir la app → Inicio completamente visible</th><td>1,35 s</td><td>1,56 s</td></tr>
+                <tr><th scope="row">Tocar un vídeo relacionado → primer fotograma</th><td>0,50 s</td><td>0,53 s</td></tr>
+                <tr><th scope="row">Tocar un vídeo relacionado → imagen visible</th><td>0,66 s</td><td>0,73 s</td></tr>
+                <tr><th scope="row">Volver a un vídeo a medias → imagen</th><td>0,37 s</td><td><span aria-label="sin medir">–</span></td></tr>
+                <tr><th scope="row">Tocar un enlace compartido → primer fotograma</th><td>0,66 s</td><td>0,84 s</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>

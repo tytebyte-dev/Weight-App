@@ -1,0 +1,139 @@
+<!--meta {
+  "title": "Preguntas sobre NewTube: SmartTube para móviles, no oficial",
+  "description": "Respuestas sobre NewTube, SmartTube para móviles no oficial: inicio de sesión, qué APK elegir, actualizaciones, Google Play Services, guardar vídeos para verlos sin conexión, enviar a la TV y en qué se diferencia de NewPipe, LibreTube y ReVanced.",
+  "faqld": true
+} -->
+    <section class="page-head">
+      <div class="wrap">
+        <p class="kicker">Preguntas</p>
+        <h1>Preguntas y respuestas.</h1>
+        <p class="lead">¿Falta algo? Pregunta en <a href="https://github.com/aleixrodriala/newtube/issues">GitHub</a> o en <a href="https://discord.gg/xu3v6euSHq">Discord</a>.</p>
+      </div>
+    </section>
+
+    <section class="block" aria-labelledby="faq-about">
+      <div class="wrap two">
+        <h2 id="faq-about">Sobre NewTube</h2>
+        <div class="faq">
+          <details id="official">
+            <summary>¿NewTube es oficial?</summary>
+            <div><p>No. NewTube es un proyecto independiente y no oficial. No está afiliado a Google LLC, YouTube ni al desarrollador de SmartTube, ni recibe su financiación, autorización o respaldo. Está basado en el código abierto de SmartTube (MIT), de <a href="https://github.com/yuliskov">@yuliskov</a>, y lo reconoce.</p></div>
+          </details>
+          <details id="smarttube-on-phones">
+            <summary>¿Se puede instalar SmartTube en el móvil?</summary>
+            <div><p>SmartTube está hecho para Android TV y TV boxes. Su README dice que no es para móviles y que no da soporte en ellos: «There will not be a phone version» (no habrá versión para móvil). NewTube es un cliente no oficial para móviles basado en el motor de SmartTube: el mismo inicio de sesión y las mismas integraciones de SponsorBlock y DeArrow, con una interfaz táctil, su propio reproductor y la opción de guardar vídeos para verlos sin conexión. Si tienes una TV con Android TV, instala <a href="https://github.com/yuliskov/SmartTube">SmartTube</a> en ella.</p></div>
+          </details>
+          <details id="compare">
+            <summary>¿En qué se diferencia de NewPipe, LibreTube o ReVanced?</summary>
+            <div><p>Todas son buenas apps, y cuál te encaja depende de lo que busques. NewPipe y LibreTube no inician sesión con una cuenta de Google: guardan tus suscripciones en el móvil o en un servidor de Piped. ReVanced parchea la app oficial y necesita GmsCore si no tienes root. NewTube está basado en SmartTube, así que usa tu cuenta real sin nada de eso.</p></div>
+          </details>
+          <details id="smartertube">
+            <summary>¿Hay otra app para móvil basada en SmartTube?</summary>
+            <div><p>Sí. <a href="https://github.com/CodeSculptor/SmarterTube">SmarterTube</a> es otro fork independiente de SmartTube para móviles, y vale la pena compararlos. Son proyectos separados. Una diferencia cuando se comprobó, en septiembre de 2026: NewTube puede guardar vídeos para verlos sin conexión.</p></div>
+          </details>
+          <details id="ai">
+            <summary>¿Está hecho con IA?</summary>
+            <div><p>Sí, en gran parte. NewTube es el proyecto de una sola persona, y la mayor parte de su código propio (la interfaz del móvil, el reproductor y la parte de red) se escribió con asistentes de programación con IA, Claude y Codex; los commits lo indican. El responsable dirige y revisa ese trabajo y usa la app a diario. Cada <a href="https://github.com/aleixrodriala/newtube/tree/main/docs/releases">registro de versión</a> (en inglés) indica qué se comprobó en un móvil real, qué solo se comprobó con pruebas automáticas y qué sigue pendiente. El motor que hay debajo es el de SmartTube, que @yuliskov y sus colaboradores llevan años escribiendo.</p></div>
+          </details>
+          <details id="donations">
+            <summary>¿Por qué no acepta donaciones?</summary>
+            <div><p>NewTube no acepta donaciones. El trabajo duro lo hizo SmartTube, así que si quieres apoyar el proyecto original, <a href="https://github.com/yuliskov/SmartTube#donation">apoya a SmartTube</a>.</p></div>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <section class="block" aria-labelledby="faq-install">
+      <div class="wrap two">
+        <h2 id="faq-install">Instalación y actualizaciones</h2>
+        <div class="faq">
+          <details id="which-apk">
+            <summary>¿Qué APK elijo?</summary>
+            <div><p><code>arm64-v8a</code> sirve para casi cualquier móvil de los últimos ocho años, más o menos. <code>armeabi-v7a</code> es para móviles antiguos de 32 bits, <code>universal</code> funciona en cualquier móvil ARM si tienes dudas (ocupa más) y <code>x86</code> es para dispositivos x86 antiguos y emuladores. NewTube necesita Android 7.0 o posterior. Los cuatro están en la <a href="{{download_href}}">página de descarga</a>.</p></div>
+          </details>
+          <details id="gms">
+            <summary>¿Necesita Google Play Services, microG, root o ReVanced?</summary>
+            <div><p>No. NewTube no es una app de YouTube parcheada. Inicia sesión con un código, como una TV, así que no necesita Google Play Services ni nada que los sustituya, y su APK no contiene ninguna biblioteca de Google Play Services.</p></div>
+          </details>
+          <details id="updates">
+            <summary>¿Cómo se actualiza?</summary>
+            <div><p>NewTube comprueba si hay una versión nueva en GitHub y te la ofrece en la app; después, el instalador de Android la instala encima de la anterior y conserva tu cuenta y tus ajustes. También puedes añadir <code>https://github.com/aleixrodriala/newtube</code> a <a href="https://obtainium.imranr.dev">Obtainium</a>, o instalar tú un APK más nuevo encima del anterior.</p></div>
+          </details>
+          <details id="safe">
+            <summary>¿Es seguro? ¿Quién firma el APK?</summary>
+            <div><p>Todos los APK de NewTube están firmados con la misma clave, que es del responsable, <a href="https://github.com/aleixrodriala">@aleixrodriala</a>. Desde la 1.10.3, GitHub Actions compila y firma los APK a partir del código etiquetado, y cada archivo tiene una atestación de compilación. Cada versión incluye una suma SHA-256 y un análisis de VirusTotal de cada APK. La app no tiene analíticas, ni informes de errores, ni SDK de anuncios. Cómo comprobar cada cosa está en la <a href="{{trust_href}}">página de seguridad</a>.</p></div>
+          </details>
+          <details id="verification">
+            <summary>¿La verificación de desarrolladores de Google bloqueará NewTube?</summary>
+            <div><p>De momento no, según Google. El requisito que empezó el 30 de septiembre de 2026 afecta a las apps que se instalan desde tiendas participantes, como Google Play, en algunas regiones y en dispositivos Android certificados. <a href="https://developer.android.com/developer-verification/guides/faq">Las preguntas frecuentes de Google</a> dicen que, si los usuarios instalan una app directamente, «these new verification requirements won't apply to your app yet» (estos nuevos requisitos aún no se aplicarán a tu app). NewTube se instala desde GitHub, es decir, directamente. Google prevé extenderlo a todo el mundo en 2027, con un «flujo avanzado»: un ajuste que se hace una sola vez y permite instalar apps de desarrolladores no verificados tras aceptar los riesgos. Qué hará NewTube en 2027 aún no está decidido.</p></div>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <section class="block" aria-labelledby="faq-account">
+      <div class="wrap two">
+        <h2 id="faq-account">Tu cuenta</h2>
+        <div class="faq">
+          <details id="sign-in">
+            <summary>¿Cómo inicio sesión?</summary>
+            <div>
+              <ol class="steps">
+                <li>Abre la pestaña <strong>Tú</strong> y toca la fila de la cuenta. NewTube te muestra un código corto.</li>
+                <li>Toca <strong>Continuar con Google</strong>. Se abre la propia página de Google: elige tu cuenta y permite el acceso. Puede mencionar una TV, porque NewTube inicia sesión igual que una TV.</li>
+                <li>Vuelve a NewTube. La sesión se completa sola.</li>
+              </ol>
+              <p>Tu contraseña solo se escribe en la página de Google, nunca en NewTube, e iniciar sesión es opcional. El token se guarda en tu móvil y nunca se envía al desarrollador (las copias de seguridad que actives pueden incluirlo). Puedes revocarlo cuando quieras en <a href="https://myaccount.google.com/security">myaccount.google.com/security</a>, en <em>Tus conexiones con aplicaciones y servicios de terceros</em>.</p>
+            </div>
+          </details>
+          <details id="accounts">
+            <summary>¿Puedo usar más de una cuenta?</summary>
+            <div><p>Sí. NewTube guarda varias cuentas con un selector, o ninguna: cuando ya tienes una, la fila de la cuenta abre el selector, desde donde puedes añadir otra. Sin iniciar sesión, YouTube sigue personalizando Inicio según lo que ves en ese móvil.</p></div>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <section class="block" aria-labelledby="faq-using">
+      <div class="wrap two">
+        <h2 id="faq-using">Uso</h2>
+        <div class="faq">
+          <details id="offline">
+            <summary>¿Puedo guardar vídeos para verlos sin conexión?</summary>
+            <div><p>Sí. Elige una calidad de hasta 1080p, o quédate solo con el audio. Los vídeos guardados se reproducen sin conexión en el mismo reproductor y aparecen en tu galería. Los subtítulos no se guardan con ellos, los directos y los estrenos no se pueden guardar, y una lista no se puede guardar entera de una vez. Guarda solo lo que la ley y las condiciones de la plataforma te permitan.</p></div>
+          </details>
+          <details id="background">
+            <summary>¿Sigue sonando con la pantalla apagada?</summary>
+            <div><p>Sí. Se reproduce en segundo plano con controles en la pantalla de bloqueo y en los auriculares, y en imagen en imagen desde Android 8. Desliza el vídeo hacia abajo y sigue sonando en un minirreproductor mientras navegas.</p></div>
+          </details>
+          <details id="cast">
+            <summary>¿Puedo verlo en la TV?</summary>
+            <div><p>Vincula NewTube con SmartTube en la TV con el código de su sección <em>Control remoto</em>. También puedes enviar el vídeo directamente a un Chromecast desde el móvil (sin directos ni subtítulos en ese modo) o usar la app de YouTube de la TV.</p></div>
+          </details>
+          <details id="shorts">
+            <summary>¿Hay Shorts?</summary>
+            <div><p>No. Los Shorts no aparecen en Inicio, Suscripciones, Historial, la búsqueda, los canales, las listas ni A continuación, y la reproducción automática se los salta. Un enlace a un Short que te compartan sigue abriéndose, en el reproductor normal.</p></div>
+          </details>
+          <details id="languages">
+            <summary>¿En qué idiomas está?</summary>
+            <div><p>Las pantallas propias de NewTube están en inglés y español por ahora. Los ajustes y mensajes que hereda de SmartTube existen en unos 45 idiomas. Cualquier ayuda con más idiomas es bienvenida: mira <a href="https://github.com/aleixrodriala/newtube/blob/main/TRANSLATING.md">TRANSLATING.md</a> (en inglés).</p></div>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <section class="block" aria-labelledby="faq-problems">
+      <div class="wrap two">
+        <h2 id="faq-problems">Problemas</h2>
+        <div class="faq">
+          <details id="wont-play">
+            <summary>Un vídeo no se reproduce. ¿Qué hago?</summary>
+            <div><p>YouTube a veces rechaza un vídeo o una cuenta. NewTube lo reintenta por otras vías, pero algunos vídeos siguen sin poder reproducirse: algunos solo funcionan en la app de YouTube o tras una compra, como las películas de pago y parte de la música. Si uno sigue fallando, <a href="https://github.com/aleixrodriala/newtube/issues/new/choose">abre una incidencia</a> con el enlace del vídeo y tu versión de NewTube.</p></div>
+          </details>
+          <details id="report">
+            <summary>¿Dónde informo de un fallo o pido una función?</summary>
+            <div><p>En las <a href="https://github.com/aleixrodriala/newtube/issues">incidencias de GitHub</a>, o pásate a saludar por <a href="https://discord.gg/xu3v6euSHq">Discord</a>.</p></div>
+          </details>
+        </div>
+      </div>
+    </section>
