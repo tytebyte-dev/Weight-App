@@ -461,13 +461,13 @@
 
     <!-- NEWTUBE(about-growth): the last two rows of Settings > About. Tap-only: no prompt, badge
          or counter. Never "ad-free" wording. -->
-    <string name="mobile_about_star">Star NewTube on GitHub</string>
+    <string name="mobile_about_star">Star Weight App on GitHub</string>
     <string name="mobile_about_star_desc">Free and open source. A star helps others find it</string>
-    <string name="mobile_about_share">Share NewTube</string>
+    <string name="mobile_about_share">Share Weight App</string>
     <string name="mobile_about_share_desc">Send the link to someone who\'d like it</string>
-    <string name="mobile_about_share_text">NewTube — a YouTube client for phones, built on SmartTube: %1$s</string>
-    <string name="mobile_about_repo_url" translatable="false">https://github.com/aleixrodriala/newtube</string>
-    <string name="mobile_about_site_url" translatable="false">https://newtube.org/</string>
+    <string name="mobile_about_share_text">Weight App — a YouTube client for phones, built on SmartTube: %1$s</string>
+    <string name="mobile_about_repo_url" translatable="false">https://github.com/tytebyte-dev/Weight-App</string>
+    <string name="mobile_about_site_url" translatable="false">https://github.com/tytebyte-dev/Weight-App</string>
     <!-- Experimental SABR playback (was strings_sabr.xml) -->
     <string name="sabr_vod_option">Prefer SABR even when links work (experimental; next VOD)</string>
     <string name="sabr_vod_stopped">Experimental SABR playback stopped. Tap play to retry, or disable SABR in Settings.</string>

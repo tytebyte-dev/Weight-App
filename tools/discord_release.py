@@ -16,7 +16,7 @@ import subprocess
 import sys
 import urllib.request
 
-REPO = "aleixrodriala/newtube"
+REPO = "tytebyte-dev/Weight-App"
 COLOR = 0x1F2A78  # the launcher icon's navy
 MAX_DESCRIPTION = 4096  # Discord's limit for an embed description
 FOOTER = "Unofficial client, not affiliated with Google, YouTube or SmartTube's developer"

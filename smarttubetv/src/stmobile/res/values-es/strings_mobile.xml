@@ -417,11 +417,11 @@
     <string name="mobile_theme_light">Claro</string>
     <string name="mobile_theme_dark">Oscuro</string>
 
-    <string name="mobile_about_star">Dale una estrella a NewTube en GitHub</string>
+    <string name="mobile_about_star">Dale una estrella a Weight App en GitHub</string>
     <string name="mobile_about_star_desc">Libre y de código abierto. Una estrella ayuda a que otros lo encuentren</string>
-    <string name="mobile_about_share">Compartir NewTube</string>
+    <string name="mobile_about_share">Compartir Weight App</string>
     <string name="mobile_about_share_desc">Envía el enlace a quien le pueda gustar</string>
-    <string name="mobile_about_share_text">NewTube, un cliente de YouTube para móviles basado en SmartTube: %1$s</string>
+    <string name="mobile_about_share_text">Weight App, un cliente de YouTube para móviles basado en SmartTube: %1$s</string>
     <string name="sabr_vod_option">Preferir SABR aunque haya enlaces (experimental; próximo vídeo)</string>
     <string name="sabr_vod_stopped">Se ha detenido la reproducción SABR experimental. Pulsa reproducir para reintentar o desactiva SABR en Ajustes.</string>
 </resources>
