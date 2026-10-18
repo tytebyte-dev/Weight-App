@@ -129,7 +129,8 @@ public class MobileSignInActivity extends MobileActivity implements SignInView {
             Intent data = result.getData();
             String accountName = result.getResultCode() == Activity.RESULT_OK && data != null ?
                     data.getStringExtra(AccountManager.KEY_ACCOUNT_NAME) : null;
-            onGmsAccountPicked(accountName);
+            String accountType = data != null ? data.getStringExtra(AccountManager.KEY_ACCOUNT_TYPE) : null;
+            onGmsAccountPicked(accountName, accountType);
         });
         mGmsAvailable = GmsAccountAuth.isAvailable(this);
         mGmsButton.setOnClickListener(v -> startGmsSignIn());
@@ -309,7 +310,7 @@ public class MobileSignInActivity extends MobileActivity implements SignInView {
         }
 
         try {
-            mGmsPickerLauncher.launch(GmsAccountAuth.createAccountPickerIntent());
+            mGmsPickerLauncher.launch(GmsAccountAuth.createAccountPickerIntent(this));
         } catch (Exception e) {
             onGmsFailed(e.getMessage());
         }
@@ -317,23 +318,32 @@ public class MobileSignInActivity extends MobileActivity implements SignInView {
 
     /**
      * @param accountName null when the user closed the picker
+     * @param accountType the authenticator of the account (microG RE has its own, not "com.google")
      */
-    private void onGmsAccountPicked(@Nullable String accountName) {
+    private void onGmsAccountPicked(@Nullable String accountName, @Nullable String accountType) {
         if (TextUtils.isEmpty(accountName) || mGmsBusy) {
             return;
         }
+
+        if (TextUtils.isEmpty(accountType)) {
+            // Some pickers return only the name: take the type the picker was limited to
+            String[] types = GmsAccountAuth.getAccountTypes(this);
+            accountType = types.length > 0 ? types[0] : GmsAccountAuth.ACCOUNT_TYPE;
+        }
+
+        final String type = accountType;
 
         mGmsBusy = true;
         applyState(State.LOADING);
 
         // Asks the account service for access (it may show its own consent screen on top of us).
-        GmsAccountAuth.requestConsent(this, accountName, (success, error) -> {
+        GmsAccountAuth.requestConsent(this, accountName, type, (success, error) -> {
             if (!success) {
                 onGmsFailed(error);
                 return;
             }
 
-            mGmsAction = YouTubeSignInService.instance().signInWithGmsAccountObserve(accountName)
+            mGmsAction = YouTubeSignInService.instance().signInWithGmsAccountObserve(accountName, type)
                     .subscribe(this::onGmsSignedIn, e -> onGmsFailed(e.getMessage()));
         });
     }

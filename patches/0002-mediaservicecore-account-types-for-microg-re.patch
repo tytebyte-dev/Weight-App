@@ -1,0 +1,268 @@
+From bd40a5311d8d647d5f2176f46efb3337f4c3e24a Mon Sep 17 00:00:00 2001
+From: Claude <noreply@anthropic.com>
+Date: Sun, 18 Oct 2026 14:44:39 +0700
+Subject: [PATCH] Sign in with the account type of the installed microG build
+
+---
+ .../service/YouTubeSignInService.java         |   4 +-
+ .../service/internal/GmsAccountAuth.java      | 108 ++++++++++++++----
+ .../internal/YouTubeAccountManager.java       |   4 +-
+ 3 files changed, 91 insertions(+), 25 deletions(-)
+
+diff --git a/youtubeapi/src/main/java/com/liskovsoft/youtubeapi/service/YouTubeSignInService.java b/youtubeapi/src/main/java/com/liskovsoft/youtubeapi/service/YouTubeSignInService.java
+index 4c456ce..3009d47 100644
+--- a/youtubeapi/src/main/java/com/liskovsoft/youtubeapi/service/YouTubeSignInService.java
++++ b/youtubeapi/src/main/java/com/liskovsoft/youtubeapi/service/YouTubeSignInService.java
+@@ -93,8 +93,8 @@ public class YouTubeSignInService implements SignInService {
+      * Sign in with a Google account from the system account manager (no device code).<br/>
+      * The user must have granted access to the account beforehand, see {@link GmsAccountAuth#requestConsent}.
+      */
+-    public Completable signInWithGmsAccountObserve(String accountName) {
+-        return Completable.fromAction(() -> mAccountManager.signInWithGmsAccount(accountName))
++    public Completable signInWithGmsAccountObserve(String accountName, String accountType) {
++        return Completable.fromAction(() -> mAccountManager.signInWithGmsAccount(accountName, accountType))
+                 .subscribeOn(Schedulers.io());
+     }
+ 
+diff --git a/youtubeapi/src/main/java/com/liskovsoft/youtubeapi/service/internal/GmsAccountAuth.java b/youtubeapi/src/main/java/com/liskovsoft/youtubeapi/service/internal/GmsAccountAuth.java
+index 5db4704..8c74bd2 100644
+--- a/youtubeapi/src/main/java/com/liskovsoft/youtubeapi/service/internal/GmsAccountAuth.java
++++ b/youtubeapi/src/main/java/com/liskovsoft/youtubeapi/service/internal/GmsAccountAuth.java
+@@ -15,6 +15,8 @@ import com.liskovsoft.googlecommon.common.models.auth.AccessToken;
+ import com.liskovsoft.sharedutils.mylogger.Log;
+ 
+ import java.nio.charset.StandardCharsets;
++import java.util.ArrayList;
++import java.util.List;
+ import java.util.concurrent.TimeUnit;
+ 
+ /**
+@@ -30,7 +32,14 @@ import java.util.concurrent.TimeUnit;
+  */
+ public final class GmsAccountAuth {
+     private static final String TAG = GmsAccountAuth.class.getSimpleName();
++    /** Account type of Google Play Services and of the original microG. Also what keys without a type mean. */
+     public static final String ACCOUNT_TYPE = "com.google";
++    /**
++     * Account types of microG builds that live next to Google Play Services (microG RE: the type is the
++     * build's base package name). Preferred over {@link #ACCOUNT_TYPE}: whoever installed one of them
++     * wants the account to come from there, not from the Google account of the device.
++     */
++    private static final String[] MICROG_ACCOUNT_TYPES = {"app.revanced", "app.morphe"};
+     public static final String TOKEN_PREFIX = "gms:";
+     // Scope string understood by the "com.google" authenticator (same family as the official YouTube app).
+     private static final String AUTH_TOKEN_TYPE = "oauth2:https://www.googleapis.com/auth/youtube";
+@@ -38,6 +47,7 @@ public final class GmsAccountAuth {
+     private static final int DEFAULT_EXPIRES_IN_SEC = 3600;
+     private static final Object LOCK = new Object();
+     private static String sLastToken;
++    private static String sLastTokenType;
+ 
+     public interface ConsentCallback {
+         void onResult(boolean success, @Nullable String error);
+@@ -51,14 +61,11 @@ public final class GmsAccountAuth {
+     }
+ 
+     /**
++     * Key of an account in the account store: {@code gms:<hex of the account type>:<hex of the account name>}.
+      * Hex keeps the key free from characters that the account store uses as delimiters.
+      */
+-    public static String toKey(String accountName) {
+-        StringBuilder sb = new StringBuilder(TOKEN_PREFIX);
+-        for (byte b : accountName.getBytes(StandardCharsets.UTF_8)) {
+-            sb.append(String.format("%02x", b));
+-        }
+-        return sb.toString();
++    public static String toKey(String accountName, @Nullable String accountType) {
++        return TOKEN_PREFIX + toHex(accountType != null && !accountType.isEmpty() ? accountType : ACCOUNT_TYPE) + ":" + toHex(accountName);
+     }
+ 
+     @Nullable
+@@ -67,7 +74,39 @@ public final class GmsAccountAuth {
+             return null;
+         }
+ 
+-        String hex = key.substring(TOKEN_PREFIX.length());
++        String body = key.substring(TOKEN_PREFIX.length());
++        int colon = body.indexOf(':');
++        // Keys written before account types existed are just gms:<hex of the account name>
++        return fromHex(colon >= 0 ? body.substring(colon + 1) : body);
++    }
++
++    public static String toAccountType(@Nullable String key) {
++        if (isGmsKey(key)) {
++            String body = key.substring(TOKEN_PREFIX.length());
++            int colon = body.indexOf(':');
++
++            if (colon >= 0) {
++                String type = fromHex(body.substring(0, colon));
++
++                if (type != null && !type.isEmpty()) {
++                    return type;
++                }
++            }
++        }
++
++        return ACCOUNT_TYPE;
++    }
++
++    private static String toHex(String value) {
++        StringBuilder sb = new StringBuilder();
++        for (byte b : value.getBytes(StandardCharsets.UTF_8)) {
++            sb.append(String.format("%02x", b));
++        }
++        return sb.toString();
++    }
++
++    @Nullable
++    private static String fromHex(String hex) {
+         if (hex.isEmpty() || hex.length() % 2 != 0) {
+             return null;
+         }
+@@ -85,29 +124,50 @@ public final class GmsAccountAuth {
+     }
+ 
+     /**
+-     * True when the device has an authenticator for Google accounts (Google Play Services or microG).
++     * Account types to offer: the microG builds that are installed, or else the Google Play Services /
++     * microG type. Empty when the device has no authenticator for Google accounts at all.
+      */
+-    public static boolean isAvailable(Context context) {
++    public static String[] getAccountTypes(Context context) {
++        List<String> installed = new ArrayList<>();
++
+         try {
+             for (AuthenticatorDescription description : AccountManager.get(context).getAuthenticatorTypes()) {
+-                if (ACCOUNT_TYPE.equals(description.type)) {
+-                    return true;
+-                }
++                installed.add(description.type);
+             }
+         } catch (Exception e) {
+             Log.e(TAG, "Can't query account authenticators: %s", e.getMessage());
+         }
+ 
+-        return false;
++        List<String> result = new ArrayList<>();
++
++        for (String type : MICROG_ACCOUNT_TYPES) {
++            if (installed.contains(type)) {
++                result.add(type);
++            }
++        }
++
++        if (result.isEmpty() && installed.contains(ACCOUNT_TYPE)) {
++            result.add(ACCOUNT_TYPE);
++        }
++
++        return result.toArray(new String[0]);
++    }
++
++    /**
++     * True when the device has an authenticator for Google accounts (microG or Google Play Services).
++     */
++    public static boolean isAvailable(Context context) {
++        return getAccountTypes(context).length > 0;
+     }
+ 
+     /**
+-     * System account picker limited to Google accounts. Result extras: {@link AccountManager#KEY_ACCOUNT_NAME}.
+-     * Offers to add an account when there is none.
++     * System account picker limited to the account types of {@link #getAccountTypes}. Result extras:
++     * {@link AccountManager#KEY_ACCOUNT_NAME} and {@link AccountManager#KEY_ACCOUNT_TYPE}.
++     * Offers to add an account (through the authenticator, i.e. microG's own login) when there is none.
+      */
+     @SuppressWarnings("deprecation")
+-    public static Intent createAccountPickerIntent() {
+-        String[] types = new String[]{ACCOUNT_TYPE};
++    public static Intent createAccountPickerIntent(Context context) {
++        String[] types = getAccountTypes(context);
+ 
+         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+             return AccountManager.newChooseAccountIntent(null, null, types, null, null, null, null);
+@@ -120,9 +180,9 @@ public final class GmsAccountAuth {
+      * Interactive request: lets the authenticator show a consent screen on top of the given activity if it needs one.
+      * Must be done once before {@link #getAccessToken} can work silently.
+      */
+-    public static void requestConsent(Activity activity, String accountName, ConsentCallback callback) {
++    public static void requestConsent(Activity activity, String accountName, String accountType, ConsentCallback callback) {
+         try {
+-            AccountManager.get(activity).getAuthToken(new Account(accountName, ACCOUNT_TYPE), AUTH_TOKEN_TYPE, null, activity, future -> {
++            AccountManager.get(activity).getAuthToken(new Account(accountName, accountType), AUTH_TOKEN_TYPE, null, activity, future -> {
+                 try {
+                     Bundle result = future.getResult();
+                     String token = result != null ? result.getString(AccountManager.KEY_AUTHTOKEN) : null;
+@@ -134,6 +194,7 @@ public final class GmsAccountAuth {
+ 
+                     synchronized (LOCK) {
+                         sLastToken = token;
++                        sLastTokenType = accountType;
+                     }
+                     callback.onResult(true, null);
+                 } catch (Exception e) {
+@@ -155,6 +216,7 @@ public final class GmsAccountAuth {
+     @Nullable
+     public static AccessToken getAccessToken(Context context, String key) {
+         String accountName = toAccountName(key);
++        String accountType = toAccountType(key);
+ 
+         if (accountName == null) {
+             Log.e(TAG, "Malformed account key");
+@@ -163,7 +225,7 @@ public final class GmsAccountAuth {
+ 
+         try {
+             Bundle result = AccountManager.get(context)
+-                    .getAuthToken(new Account(accountName, ACCOUNT_TYPE), AUTH_TOKEN_TYPE, null, false, null, null)
++                    .getAuthToken(new Account(accountName, accountType), AUTH_TOKEN_TYPE, null, false, null, null)
+                     .getResult(TOKEN_TIMEOUT_SEC, TimeUnit.SECONDS);
+ 
+             String token = result != null ? result.getString(AccountManager.KEY_AUTHTOKEN) : null;
+@@ -176,6 +238,7 @@ public final class GmsAccountAuth {
+ 
+             synchronized (LOCK) {
+                 sLastToken = token;
++                sLastTokenType = accountType;
+             }
+ 
+             return AccessToken.create(token, "Bearer", DEFAULT_EXPIRES_IN_SEC);
+@@ -190,10 +253,13 @@ public final class GmsAccountAuth {
+      */
+     public static void invalidateLastToken(Context context) {
+         String token;
++        String type;
+ 
+         synchronized (LOCK) {
+             token = sLastToken;
++            type = sLastTokenType != null ? sLastTokenType : ACCOUNT_TYPE;
+             sLastToken = null;
++            sLastTokenType = null;
+         }
+ 
+         if (token == null) {
+@@ -201,7 +267,7 @@ public final class GmsAccountAuth {
+         }
+ 
+         try {
+-            AccountManager.get(context).invalidateAuthToken(ACCOUNT_TYPE, token);
++            AccountManager.get(context).invalidateAuthToken(type, token);
+         } catch (Exception e) {
+             Log.e(TAG, "Can't invalidate token: %s", e.getMessage());
+         }
+diff --git a/youtubeapi/src/main/java/com/liskovsoft/youtubeapi/service/internal/YouTubeAccountManager.java b/youtubeapi/src/main/java/com/liskovsoft/youtubeapi/service/internal/YouTubeAccountManager.java
+index 195c7ff..d7ed1db 100644
+--- a/youtubeapi/src/main/java/com/liskovsoft/youtubeapi/service/internal/YouTubeAccountManager.java
++++ b/youtubeapi/src/main/java/com/liskovsoft/youtubeapi/service/internal/YouTubeAccountManager.java
+@@ -111,8 +111,8 @@ public class YouTubeAccountManager {
+      *
+      * @throws IllegalStateException when the account can't be used
+      */
+-    public void signInWithGmsAccount(String accountName) {
+-        String key = GmsAccountAuth.toKey(accountName);
++    public void signInWithGmsAccount(String accountName, String accountType) {
++        String key = GmsAccountAuth.toKey(accountName, accountType);
+ 
+         persistRefreshToken(key);
+ 
+-- 
+2.43.0
+
