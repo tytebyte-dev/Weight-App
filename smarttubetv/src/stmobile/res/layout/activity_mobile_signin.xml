@@ -478,4 +478,43 @@
 
     </ScrollView>
 
+    <!--
+      Second way in, shown by MobileSignInActivity only when the device has a Google account provider
+      (microG or Google Play Services): pick an account from the system, no code needed.
+      The device-code flow above stays as the fallback.
+    -->
+    <LinearLayout
+        android:id="@+id/mobile_signin_gms_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingStart="24dp"
+        android:paddingEnd="24dp"
+        android:paddingTop="8dp"
+        android:paddingBottom="16dp"
+        android:visibility="gone"
+        tools:visibility="visible">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/mobile_signin_gms_hint"
+            android:textColor="@color/mobile_color_on_surface_secondary"
+            android:textSize="12sp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/mobile_signin_gms_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:minHeight="52dp"
+            android:text="@string/mobile_signin_gms_button"
+            android:textColor="@color/mobile_color_on_surface"
+            android:textSize="15sp"
+            app:backgroundTint="@color/mobile_color_placeholder"
+            app:cornerRadius="24dp" />
+
+    </LinearLayout>
+
 </LinearLayout>

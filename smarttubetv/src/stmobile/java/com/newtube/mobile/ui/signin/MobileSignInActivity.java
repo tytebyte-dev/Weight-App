@@ -1,5 +1,7 @@
 package com.newtube.mobile.ui.signin;
 
+import android.accounts.AccountManager;
+import android.app.Activity;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
@@ -11,6 +13,8 @@ import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.Nullable;
 
 import com.google.android.material.button.MaterialButton;
@@ -20,7 +24,11 @@ import com.liskovsoft.smartyoutubetv2.common.app.presenters.YTSignInPresenter;
 import com.liskovsoft.smartyoutubetv2.common.app.views.SignInView;
 import com.liskovsoft.smartyoutubetv2.common.utils.Utils;
 import com.liskovsoft.smartyoutubetv2.tv.R;
+import com.liskovsoft.youtubeapi.service.YouTubeSignInService;
+import com.liskovsoft.youtubeapi.service.internal.GmsAccountAuth;
 import com.newtube.mobile.ui.common.MobileActivity;
+
+import io.reactivex.rxjava3.disposables.Disposable;
 
 /**
  * Touch device-code sign-in screen - Wave 5 (ARCHITECTURE.md section 7, "Account-login seam"),
@@ -83,6 +91,14 @@ public class MobileSignInActivity extends MobileActivity implements SignInView {
     private MaterialButton mReopenButton;
     private View mSuccessContainer;
     private ImageButton mBackButton;
+    private View mGmsContainer;
+    private MaterialButton mGmsButton;
+
+    /** Sign-in through a Google account of the device (microG / Google Play Services), see {@link GmsAccountAuth}. */
+    private ActivityResultLauncher<Intent> mGmsPickerLauncher;
+    private Disposable mGmsAction;
+    private boolean mGmsAvailable;
+    private boolean mGmsBusy;
 
     private State mState = State.LOADING;
     private boolean mResumed;
@@ -109,6 +125,16 @@ public class MobileSignInActivity extends MobileActivity implements SignInView {
         mReopenButton.setOnClickListener(v -> openSignInUrl());
         mRetryButton.setOnClickListener(v -> restartSignIn());
 
+        mGmsPickerLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+            Intent data = result.getData();
+            String accountName = result.getResultCode() == Activity.RESULT_OK && data != null ?
+                    data.getStringExtra(AccountManager.KEY_ACCOUNT_NAME) : null;
+            onGmsAccountPicked(accountName);
+        });
+        mGmsAvailable = GmsAccountAuth.isAvailable(this);
+        mGmsButton.setOnClickListener(v -> startGmsSignIn());
+        applyGmsVisibility();
+
         mSignInPresenter = YTSignInPresenter.instance(this);
         mSignInPresenter.setView(this);
         mSignInPresenter.onViewInitialized();
@@ -130,6 +156,8 @@ public class MobileSignInActivity extends MobileActivity implements SignInView {
         mReopenButton = findViewById(R.id.mobile_signin_reopen_button);
         mSuccessContainer = findViewById(R.id.mobile_signin_success_container);
         mBackButton = findViewById(R.id.mobile_signin_back);
+        mGmsContainer = findViewById(R.id.mobile_signin_gms_container);
+        mGmsButton = findViewById(R.id.mobile_signin_gms_button);
     }
 
     @Override
@@ -169,6 +197,10 @@ public class MobileSignInActivity extends MobileActivity implements SignInView {
     @Override
     protected void onDestroy() {
         MobileSignInKeepaliveService.stop(this);
+
+        if (mGmsAction != null) {
+            mGmsAction.dispose();
+        }
 
         if (mSignInPresenter != null && mSignInPresenter.getView() == this) {
             mSignInPresenter.onViewDestroyed();
@@ -259,6 +291,81 @@ public class MobileSignInActivity extends MobileActivity implements SignInView {
         mWaitingContainer.setVisibility(state == State.WAITING ? View.VISIBLE : View.GONE);
         mSuccessContainer.setVisibility(state == State.SUCCESS ? View.VISIBLE : View.GONE);
         mErrorContainer.setVisibility(state == State.ERROR ? View.VISIBLE : View.GONE);
+
+        applyGmsVisibility();
+    }
+
+    private void applyGmsVisibility() {
+        mGmsContainer.setVisibility(mGmsAvailable && !mGmsBusy && mState != State.SUCCESS ? View.VISIBLE : View.GONE);
+    }
+
+    // ---------------------------------------------------------------------------------
+    // Sign-in with a Google account of the device (microG / Google Play Services)
+    // ---------------------------------------------------------------------------------
+
+    private void startGmsSignIn() {
+        if (mGmsBusy) {
+            return;
+        }
+
+        try {
+            mGmsPickerLauncher.launch(GmsAccountAuth.createAccountPickerIntent());
+        } catch (Exception e) {
+            onGmsFailed(e.getMessage());
+        }
+    }
+
+    /**
+     * @param accountName null when the user closed the picker
+     */
+    private void onGmsAccountPicked(@Nullable String accountName) {
+        if (TextUtils.isEmpty(accountName) || mGmsBusy) {
+            return;
+        }
+
+        mGmsBusy = true;
+        applyState(State.LOADING);
+
+        // Asks the account service for access (it may show its own consent screen on top of us).
+        GmsAccountAuth.requestConsent(this, accountName, (success, error) -> {
+            if (!success) {
+                onGmsFailed(error);
+                return;
+            }
+
+            mGmsAction = YouTubeSignInService.instance().signInWithGmsAccountObserve(accountName)
+                    .subscribe(this::onGmsSignedIn, e -> onGmsFailed(e.getMessage()));
+        });
+    }
+
+    private void onGmsSignedIn() {
+        runOnUiThread(() -> {
+            mGmsBusy = false;
+
+            if (isFinishing() || isDestroyed()) {
+                return;
+            }
+
+            // No need for the device code any more: stop its poll before it can sign in a second time.
+            if (mSignInPresenter != null) {
+                mSignInPresenter.unhold();
+            }
+
+            showSuccess();
+        });
+    }
+
+    private void onGmsFailed(@Nullable String detail) {
+        runOnUiThread(() -> {
+            mGmsBusy = false;
+
+            if (isFinishing() || isDestroyed()) {
+                return;
+            }
+
+            showError(detail);
+            mErrorView.setText(R.string.mobile_signin_gms_error);
+        });
     }
 
     private void showError(String message) {

@@ -57,6 +57,14 @@
             <action android:name="android.intent.action.VIEW" />
             <data android:mimeType="application/vnd.android.package-archive" />
         </intent>
+        <!-- Google account provider for "Sign in with a device Google account" (microG or Google Play
+             Services): the account authenticator must be visible to AccountManager. -->
+        <intent>
+            <action android:name="android.accounts.AccountAuthenticator" />
+        </intent>
+        <package android:name="app.revanced.android.gms" />
+        <package android:name="app.morphe.android.gms" />
+        <package android:name="com.google.android.gms" />
     </queries>
 
     <!-- Casting (Route B): SSDP/DIAL discovery needs multicast (Android filters multicast in
@@ -88,6 +96,22 @@
         android:name="com.newtube.mobile.MobileMainApplication"
         android:theme="@style/Theme.NewTube"
         tools:replace="android:name,android:theme">
+
+        <!-- microG (RE) identifies the calling app by these entries: it hands account tokens for
+             YouTube only to the package it believes is the official YouTube app. Without microG
+             these are ignored. One pair per microG build flavour (ReVanced / Morphe). -->
+        <meta-data
+            android:name="app.revanced.android.gms.SPOOFED_PACKAGE_NAME"
+            android:value="com.google.android.youtube" />
+        <meta-data
+            android:name="app.revanced.android.gms.SPOOFED_PACKAGE_SIGNATURE"
+            android:value="24bb24c05e47e0aefa68a58a766179d9b613a600" />
+        <meta-data
+            android:name="app.morphe.android.gms.SPOOFED_PACKAGE_NAME"
+            android:value="com.google.android.youtube" />
+        <meta-data
+            android:name="app.morphe.android.gms.SPOOFED_PACKAGE_SIGNATURE"
+            android:value="24bb24c05e47e0aefa68a58a766179d9b613a600" />
 
         <!-- The TV manifest makes Splash singleInstance, which puts it in a separate task and
              forces Android's non-overridable cross-task slide when it routes into mobile Home.
