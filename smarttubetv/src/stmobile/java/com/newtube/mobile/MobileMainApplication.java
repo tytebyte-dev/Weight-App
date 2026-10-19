@@ -167,6 +167,10 @@ public class MobileMainApplication extends MainApplication {
         // global exception handler and every other View->Activity mapping.
         super.onCreate();
 
+        // Censorship bypass: in a region that blocks or throttles YouTube (or when it cannot be reached
+        // directly) the first screen waits briefly for the tunnel instead of failing its first requests.
+        com.newtube.mobile.bypass.BypassController.instance(this).installStartupGate();
+
         // Release-visible launch milestones + the "first frame drawn" hook used below.
         LaunchMilestones.install(this);
 

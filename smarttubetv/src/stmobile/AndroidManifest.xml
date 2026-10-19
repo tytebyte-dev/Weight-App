@@ -44,6 +44,9 @@
          primitives, which only the Vibrator plays - View.performHapticFeedback has no way to ask
          for them. Normal, auto-granted permission. -->
     <uses-permission android:name="android.permission.VIBRATE" />
+    <!-- Censorship bypass tunnel (BypassVpnService): a foreground service of its own kind. The VPN
+         permission itself is the user's one-time system dialog, not a manifest permission. -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE" />
 
     <!-- The in-app updater hands its APK straight to Android's installer (AppUpdates.systemInstaller):
          from Android 11 these queries make the installers visible, so apps that also open APK files
@@ -330,6 +333,28 @@
             android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation|layoutDirection|keyboardHidden|uiMode"
             android:screenOrientation="unspecified"
             android:theme="@style/Theme.NewTube" />
+
+        <!-- Censorship bypass: per-app VPN (hev-socks5-tunnel -> Xray-core). Runs in the app process on
+             purpose: Xray's own sockets are protect()ed out of the VPN from inside it. -->
+        <service
+            android:name="com.newtube.mobile.bypass.BypassVpnService"
+            android:exported="false"
+            android:foregroundServiceType="specialUse"
+            android:permission="android.permission.BIND_VPN_SERVICE">
+            <intent-filter>
+                <action android:name="android.net.VpnService" />
+            </intent-filter>
+            <property
+                android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
+                android:value="vpn" />
+        </service>
+
+        <!-- Transparent host for Android's one-time VPN consent dialog. -->
+        <activity
+            android:name="com.newtube.mobile.bypass.VpnConsentActivity"
+            android:exported="false"
+            android:excludeFromRecents="true"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
 
     </application>
 

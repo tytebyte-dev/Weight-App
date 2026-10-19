@@ -36,3 +36,10 @@
 -dontwarn org.slf4j.**
 
 # End Enable minification
+
+# Censorship bypass cores (gomobile / hev JNI)
+-keep class go.** { *; }
+-keep class xraybridge.** { *; }
+-keep class hev.htproxy.** { *; }
+-dontwarn go.**
+-dontwarn xraybridge.**

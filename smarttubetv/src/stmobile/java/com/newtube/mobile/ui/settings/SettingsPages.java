@@ -31,7 +31,7 @@ import java.util.List;
  *   Account                      (the accounts sheet)
  *   App:    General · Tabs and feeds · History and privacy
  *   Video:  Playback · Video quality · Captions · SponsorBlock · DeArrow
- *   Other:  Backup and restore · Advanced · About
+ *   Other:  Backup and restore · Censorship bypass · Advanced · About
  * </pre>
  */
 public final class SettingsPages {
@@ -51,6 +51,9 @@ public final class SettingsPages {
     public static final String BACKUP = "backup";
     public static final String ADVANCED = "advanced";
     public static final String ABOUT = "about";
+    public static final String BYPASS = "bypass";
+    public static final String BYPASS_PROFILES = "bypass_profiles";
+    public static final String BYPASS_ADVANCED = "bypass_advanced";
 
     /** A built page: its title and rows. */
     public static final class Page {
@@ -99,6 +102,12 @@ public final class SettingsPages {
                 return PlayerPages.advanced(context);
             case ABOUT:
                 return about(context);
+            case BYPASS:
+                return BypassPages.main(context);
+            case BYPASS_PROFILES:
+                return BypassPages.profiles(context);
+            case BYPASS_ADVANCED:
+                return BypassPages.advanced(context);
             case ROOT:
             default:
                 return root(context);
@@ -140,6 +149,8 @@ public final class SettingsPages {
         rows.add(SettingsRow.header(context.getString(R.string.mobile_settings_group_other)));
         rows.add(SettingsRow.page(R.drawable.ic_settings_backup, context.getString(R.string.mobile_settings_backup),
                 context.getString(R.string.mobile_settings_backup_summary), BACKUP));
+        rows.add(SettingsRow.page(R.drawable.ic_settings_bypass, context.getString(R.string.bypass_title),
+                context.getString(R.string.bypass_title_summary), BYPASS));
         rows.add(SettingsRow.page(R.drawable.ic_settings_advanced, context.getString(R.string.mobile_settings_advanced),
                 context.getString(R.string.mobile_settings_advanced_summary), ADVANCED));
         rows.add(SettingsRow.page(R.drawable.ic_settings_about, context.getString(R.string.mobile_settings_about),
