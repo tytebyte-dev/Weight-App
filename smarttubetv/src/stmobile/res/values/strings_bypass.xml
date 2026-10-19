@@ -112,4 +112,8 @@
     <string name="bypass_notif_app">%1$s · this app only</string>
     <string name="bypass_notif_device">%1$s · whole device</string>
     <string name="bypass_notif_stop">Turn off</string>
+    <string name="bypass_dpi_on">Split the TLS handshake (DPI evasion)</string>
+    <string name="bypass_dpi_on_summary">Off: connections are not fragmented; the built-in profile then connects plainly</string>
+    <string name="bypass_dns_encrypted">Encrypted DNS (DNS-over-HTTPS)</string>
+    <string name="bypass_dns_encrypted_summary">Off: the built-in resolvers are queried in plain text over UDP</string>
 </resources>

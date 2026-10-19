@@ -40,6 +40,8 @@ public final class BypassSettings {
     private static final String FRAGMENT_INTERVAL = "fragment_interval";
     private static final String FRAGMENT_PROXY = "fragment_proxy";
     private static final String DNS = "dns_servers";
+    private static final String FRAGMENT_ON = "fragment_on";
+    private static final String DNS_ENCRYPTED = "dns_encrypted";
     private static final String DIRECT_DOMAINS = "direct_domains";
     private static final String PROXY_DOMAINS = "proxy_domains";
     private static final String LOG_LEVEL = "log_level";
@@ -160,6 +162,22 @@ public final class BypassSettings {
         mPrefs.edit().putString(FRAGMENT_INTERVAL, v).apply();
     }
 
+    public boolean fragmentEnabled() {
+        return mPrefs.getBoolean(FRAGMENT_ON, true);
+    }
+
+    public void setFragmentEnabled(boolean on) {
+        mPrefs.edit().putBoolean(FRAGMENT_ON, on).apply();
+    }
+
+    public boolean dnsEncrypted() {
+        return mPrefs.getBoolean(DNS_ENCRYPTED, true);
+    }
+
+    public void setDnsEncrypted(boolean on) {
+        mPrefs.edit().putBoolean(DNS_ENCRYPTED, on).apply();
+    }
+
     public boolean fragmentProxyConnection() {
         return mPrefs.getBoolean(FRAGMENT_PROXY, false);
     }
@@ -239,6 +257,8 @@ public final class BypassSettings {
         o.fragmentLength = fragmentLength();
         o.fragmentInterval = fragmentInterval();
         o.fragmentProxyConnection = fragmentProxyConnection();
+        o.fragmentEnabled = fragmentEnabled();
+        o.dnsEncrypted = dnsEncrypted();
         o.routeAll = routeAll();
         o.directDomains = splitList(directDomainsText(), new ArrayList<>());
         o.proxyDomains = splitList(proxyDomainsText(), new ArrayList<>());

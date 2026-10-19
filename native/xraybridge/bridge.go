@@ -29,8 +29,12 @@ type Protector interface {
 }
 
 var (
-	mu        sync.Mutex
-	instance  *core.Instance
+	mu       sync.Mutex // guards instance
+	instance *core.Instance
+
+	// pmu guards protector only. It must not be mu: the dialer/listener controllers run while
+	// StartInstance holds mu (the SOCKS inbound opens its listener), so sharing it deadlocks Start.
+	pmu       sync.Mutex
 	protector Protector
 	hooksOnce sync.Once
 	hooksErr  error
@@ -38,9 +42,9 @@ var (
 
 // SetProtector installs (or, with nil, removes) the socket protector.
 func SetProtector(p Protector) {
-	mu.Lock()
+	pmu.Lock()
 	protector = p
-	mu.Unlock()
+	pmu.Unlock()
 }
 
 // SetAssetDir points Xray at the directory that holds geoip.dat / geosite.dat.
@@ -78,9 +82,9 @@ func CheckConfig(configJSON string) (err error) {
 func registerHooks() error {
 	hooksOnce.Do(func() {
 		control := func(network, address string, conn syscall.RawConn) error {
-			mu.Lock()
+			pmu.Lock()
 			p := protector
-			mu.Unlock()
+			pmu.Unlock()
 			if p == nil {
 				return nil
 			}

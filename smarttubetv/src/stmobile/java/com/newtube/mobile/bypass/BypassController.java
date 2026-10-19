@@ -263,6 +263,16 @@ public final class BypassController {
         }
         set(State.STARTING, Via.LOCAL, "");
         mIo.execute(this::startLocalNow);
+        watchStart();
+    }
+
+    /** A start that never reports back must not leave the switch on "Starting…" for ever. */
+    private void watchStart() {
+        mMain.postDelayed(() -> {
+            if (mState == State.STARTING) {
+                set(State.ERROR, Via.NONE, mContext.getString(R.string.bypass_error_tunnel));
+            }
+        }, 20_000);
     }
 
     public void disconnect(@NonNull Context context) {

@@ -112,4 +112,8 @@
     <string name="bypass_notif_app">%1$s · только это приложение</string>
     <string name="bypass_notif_device">%1$s · всё устройство</string>
     <string name="bypass_notif_stop">Выключить</string>
+    <string name="bypass_dpi_on">Дробить TLS-рукопожатие (обход DPI)</string>
+    <string name="bypass_dpi_on_summary">Выкл.: соединения не дробятся; встроенный профиль тогда подключается напрямую</string>
+    <string name="bypass_dns_encrypted">Зашифрованный DNS (DNS-over-HTTPS)</string>
+    <string name="bypass_dns_encrypted_summary">Выкл.: встроенные DNS-серверы опрашиваются открытым текстом по UDP</string>
 </resources>

@@ -26,6 +26,9 @@ public final class XrayConfigBuilder {
     public static final String TAG_DNS = "dns-out";
 
     /** DNS-over-HTTPS in "local" mode: the query leaves directly (never through the proxy that may itself need resolving). */
+    /** Plain (unencrypted) resolvers, used when encrypted DNS is switched off. */
+    public static final List<String> PLAIN_DNS = Arrays.asList("1.1.1.1", "8.8.8.8");
+
     public static final List<String> DEFAULT_DNS = Arrays.asList(
             "https+local://1.1.1.1/dns-query",
             "https+local://8.8.8.8/dns-query",
@@ -47,6 +50,10 @@ public final class XrayConfigBuilder {
         public boolean sniffing = true;
         public boolean ipv6 = false;
         public List<String> dnsServers = DEFAULT_DNS;
+        /** False: the built-in list becomes plain UDP resolvers instead of DNS-over-HTTPS. */
+        public boolean dnsEncrypted = true;
+        /** False: no TLS-hello splitting anywhere (the built-in profile becomes a plain direct connection). */
+        public boolean fragmentEnabled = true;
         /** The built-in profile's TLS-hello fragmentation: packets, length range, interval range (ms). */
         public String fragmentPackets = "tlshello";
         public String fragmentLength = "100-200";
@@ -92,7 +99,7 @@ public final class XrayConfigBuilder {
         JSONArray outbounds = new JSONArray();
         boolean builtin = profile.isBuiltin();
         if (builtin) {
-            outbounds.put(freedom(TAG_PROXY, o, true));   // "proxy" is the fragmenting direct connection
+            outbounds.put(freedom(TAG_PROXY, o, o.fragmentEnabled));   // "proxy" is the fragmenting direct connection
         } else {
             outbounds.put(proxyOutbound(profile, o));
         }
@@ -130,7 +137,8 @@ public final class XrayConfigBuilder {
 
     private static JSONObject dns(Options o) throws JSONException {
         JSONArray servers = new JSONArray();
-        List<String> list = o.dnsServers == null || o.dnsServers.isEmpty() ? DEFAULT_DNS : o.dnsServers;
+        List<String> list = o.dnsServers == null || o.dnsServers.isEmpty() || o.dnsServers.equals(DEFAULT_DNS)
+                ? (o.dnsEncrypted ? DEFAULT_DNS : PLAIN_DNS) : o.dnsServers;
         for (String s : list) {
             servers.put(s);
         }
@@ -180,7 +188,7 @@ public final class XrayConfigBuilder {
             }
             sockopt.put("domainStrategy", o.ipv6 ? "UseIP" : "UseIPv4");
         }
-        if (o.fragmentProxyConnection && stream != null && !udpTransport) {
+        if (o.fragmentEnabled && o.fragmentProxyConnection && stream != null && !udpTransport) {
             JSONObject mask = new JSONObject()
                     .put("type", "fragment")
                     .put("settings", new JSONObject()

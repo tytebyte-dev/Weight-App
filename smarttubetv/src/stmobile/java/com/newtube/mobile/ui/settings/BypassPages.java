@@ -307,6 +307,11 @@ final class BypassPages {
                         })));
 
         rows.add(SettingsRow.header(context.getString(R.string.bypass_group_dpi)));
+        rows.add(SettingsRow.toggle(context.getString(R.string.bypass_dpi_on),
+                context.getString(R.string.bypass_dpi_on_summary), s::fragmentEnabled, on -> {
+                    s.setFragmentEnabled(on);
+                    controller.reconnectIfRunning(context);
+                }));
         rows.add(SettingsRow.<String>choice(context.getString(R.string.bypass_fragment_packets))
                 .option(context.getString(R.string.bypass_fragment_tlshello), "tlshello")
                 .option(context.getString(R.string.bypass_fragment_first3), "1-3")
@@ -326,6 +331,11 @@ final class BypassPages {
                 }));
 
         rows.add(SettingsRow.header(context.getString(R.string.bypass_group_dns)));
+        rows.add(SettingsRow.toggle(context.getString(R.string.bypass_dns_encrypted),
+                context.getString(R.string.bypass_dns_encrypted_summary), s::dnsEncrypted, on -> {
+                    s.setDnsEncrypted(on);
+                    controller.reconnectIfRunning(context);
+                }));
         rows.add(SettingsRow.action(context.getString(R.string.bypass_dns),
                 s.dnsServersText().isEmpty() ? context.getString(R.string.bypass_dns_default) : s.dnsServersText().replace("\n", ", "),
                 page -> promptText(page, R.string.bypass_dns, R.string.bypass_dns_hint, s.dnsServersText(), true, v -> {

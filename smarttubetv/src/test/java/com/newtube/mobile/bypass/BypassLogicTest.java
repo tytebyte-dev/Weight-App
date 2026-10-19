@@ -329,4 +329,16 @@ public class BypassLogicTest {
             assertEquals(expected[i][1], gaps.get(i)[1]);
         }
     }
+
+    @Test
+    public void dpiAndDnsCanBeSwitchedOff() throws Exception {
+        XrayConfigBuilder.Options o = new XrayConfigBuilder.Options();
+        o.socksPort = 1080;
+        o.fragmentEnabled = false;
+        o.dnsEncrypted = false;
+        String json = XrayConfigBuilder.build(ProxyProfile.builtin("Built-in"), o);
+        assertFalse(json.contains("\"fragment\""));
+        assertFalse(json.contains("https+local"));
+        assertTrue(json.contains("\"1.1.1.1\""));
+    }
 }
