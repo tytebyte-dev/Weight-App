@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="music_search_hint">Поиск музыки</string>
+    <string name="music_chip_all">Все</string>
+    <string name="music_chip_songs">Песни</string>
+    <string name="music_chip_playlists">Плейлисты</string>
+    <string name="music_chip_artists">Исполнители</string>
+    <string name="music_download">Скачать</string>
+    <string name="music_like">Нравится</string>
+    <string name="music_like_signin">Войдите, чтобы ставить лайки</string>
+    <string name="music_like_failed">Не удалось сохранить лайк</string>
+</resources>

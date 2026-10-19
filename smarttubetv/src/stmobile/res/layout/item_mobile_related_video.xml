@@ -97,4 +97,16 @@
 
     </LinearLayout>
 
+    <!-- Three dots: the same context menu as a card long-press (playlists, download, not interested...). -->
+    <ImageButton
+        android:id="@+id/related_overflow"
+        android:layout_width="40dp"
+        android:layout_height="48dp"
+        android:layout_gravity="top"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="@string/mobile_player_more"
+        android:padding="8dp"
+        android:src="@drawable/ic_mobile_more_vert"
+        android:visibility="gone" />
+
 </LinearLayout>

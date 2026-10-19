@@ -37,6 +37,18 @@ public class VideoCardAdapter extends ListAdapter<Video, RecyclerView.ViewHolder
     private static final int VIEW_TYPE_VIDEO = 0;
     /** Channel result row (round avatar + name + subs) — e.g. channels in search results. */
     private static final int VIEW_TYPE_CHANNEL = 1;
+    /** Music tab row (art + title/artist + duration + download/like/more). */
+    private static final int VIEW_TYPE_MUSIC = 2;
+
+    /** Music tab filters (chips). */
+    public static final int MUSIC_ALL = 0;
+    public static final int MUSIC_SONGS = 1;
+    public static final int MUSIC_PLAYLISTS = 2;
+    public static final int MUSIC_ARTISTS = 3;
+
+    private boolean mMusicMode;
+    private int mMusicFilter = MUSIC_ALL;
+    private java.util.List<Video> mSource = java.util.Collections.emptyList();
 
     public interface OnVideoClickListener {
         void onVideoClick(Video video);
@@ -80,18 +92,79 @@ public class VideoCardAdapter extends ListAdapter<Video, RecyclerView.ViewHolder
         }
     };
 
+    /** Switches between the normal card grid and the Music tab's list rows. */
+    public void setMusicMode(boolean music) {
+        if (mMusicMode == music) {
+            return;
+        }
+        mMusicMode = music;
+        mMusicFilter = MUSIC_ALL;
+        super.submitList(filtered(mSource));
+        notifyDataSetChanged();
+    }
+
+    public void setMusicFilter(int filter) {
+        if (mMusicFilter == filter) {
+            return;
+        }
+        mMusicFilter = filter;
+        super.submitList(filtered(mSource));
+    }
+
+    @Override
+    public void submitList(java.util.List<Video> list) {
+        mSource = list != null ? list : java.util.Collections.emptyList();
+        super.submitList(filtered(mSource));
+    }
+
+    @Override
+    public void submitList(java.util.List<Video> list, Runnable commitCallback) {
+        mSource = list != null ? list : java.util.Collections.emptyList();
+        super.submitList(filtered(mSource), commitCallback);
+    }
+
+    private java.util.List<Video> filtered(java.util.List<Video> source) {
+        if (!mMusicMode || mMusicFilter == MUSIC_ALL) {
+            return source;
+        }
+        java.util.List<Video> out = new java.util.ArrayList<>();
+        for (Video v : source) {
+            boolean artist = v.isChannel() && !v.isPlaylistAsChannel();
+            boolean playlist = v.isPlaylistAsChannel() || v.isPlaylistCard();
+            boolean keep;
+            switch (mMusicFilter) {
+                case MUSIC_ARTISTS:
+                    keep = artist;
+                    break;
+                case MUSIC_PLAYLISTS:
+                    keep = playlist;
+                    break;
+                default:
+                    keep = !artist && !playlist;
+                    break;
+            }
+            if (keep) {
+                out.add(v);
+            }
+        }
+        return out;
+    }
+
     @Override
     public int getItemViewType(int position) {
         // isChannel() alone also matches playlists delivered in the playlist-as-channel shape
         // (videoId/playlistId null + a VL... channelId — the standard shape of the user
         // Playlists section): those must stay thumbnail cards, not round-avatar channel rows.
         Video item = getItem(position);
-        return item.isChannel() && !item.isPlaylistAsChannel() ? VIEW_TYPE_CHANNEL : VIEW_TYPE_VIDEO;
+        if (item.isChannel() && !item.isPlaylistAsChannel()) {
+            return VIEW_TYPE_CHANNEL;
+        }
+        return mMusicMode ? VIEW_TYPE_MUSIC : VIEW_TYPE_VIDEO;
     }
 
     /** Full-span rows (channel results) for the grid's SpanSizeLookup in multi-column layouts. */
     public boolean isFullSpan(int position) {
-        return position >= 0 && position < getItemCount() && getItemViewType(position) == VIEW_TYPE_CHANNEL;
+        return position >= 0 && position < getItemCount() && getItemViewType(position) != VIEW_TYPE_VIDEO;
     }
 
     @NonNull
@@ -101,6 +174,9 @@ public class VideoCardAdapter extends ListAdapter<Video, RecyclerView.ViewHolder
         if (viewType == VIEW_TYPE_CHANNEL) {
             return new ChannelViewHolder(inflater.inflate(R.layout.item_mobile_channel_card, parent, false), mClickListener);
         }
+        if (viewType == VIEW_TYPE_MUSIC) {
+            return new MusicRowHolder(inflater.inflate(R.layout.item_mobile_music_row, parent, false), mClickListener);
+        }
         return new VideoViewHolder(inflater.inflate(R.layout.item_video_card, parent, false), mClickListener);
     }
 
@@ -108,6 +184,8 @@ public class VideoCardAdapter extends ListAdapter<Video, RecyclerView.ViewHolder
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         if (holder instanceof ChannelViewHolder) {
             ((ChannelViewHolder) holder).bind(getItem(position), mLongClickListener);
+        } else if (holder instanceof MusicRowHolder) {
+            ((MusicRowHolder) holder).bind(getItem(position), mLongClickListener);
         } else {
             ((VideoViewHolder) holder).bind(getItem(position), mLongClickListener);
         }
@@ -120,6 +198,8 @@ public class VideoCardAdapter extends ListAdapter<Video, RecyclerView.ViewHolder
             ((VideoViewHolder) holder).unbind();
         } else if (holder instanceof ChannelViewHolder) {
             ((ChannelViewHolder) holder).unbind();
+        } else if (holder instanceof MusicRowHolder) {
+            ((MusicRowHolder) holder).unbind();
         }
     }
 

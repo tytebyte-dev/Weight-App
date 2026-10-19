@@ -163,7 +163,7 @@ public final class BypassSettings {
     }
 
     public boolean fragmentEnabled() {
-        return mPrefs.getBoolean(FRAGMENT_ON, true);
+        return mPrefs.getBoolean(FRAGMENT_ON, false);
     }
 
     public void setFragmentEnabled(boolean on) {
@@ -171,7 +171,7 @@ public final class BypassSettings {
     }
 
     public boolean dnsEncrypted() {
-        return mPrefs.getBoolean(DNS_ENCRYPTED, true);
+        return mPrefs.getBoolean(DNS_ENCRYPTED, false);
     }
 
     public void setDnsEncrypted(boolean on) {

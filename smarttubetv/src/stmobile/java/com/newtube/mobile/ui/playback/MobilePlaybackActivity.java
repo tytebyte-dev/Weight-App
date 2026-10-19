@@ -997,6 +997,8 @@ public class MobilePlaybackActivity extends MobileActivity
         // dozen rows while the video starts) that empty frame stayed up ~1 s.
         mWatchRelated.setItemAnimator(null);
         mWatchRelated.setAdapter(mRelatedAdapter);
+        mRelatedAdapter.setMenuListener(video -> com.liskovsoft.smartyoutubetv2.common.app.presenters.dialogs.menu.VideoMenuPresenter
+                .instance(this).showMenu(video, (item, action) -> { }));
 
         // Queue list: same row layout and same click routing as Up next, but it scrolls INSIDE the
         // card (nested scrolling on + a max height) so a long playlist can't push the rest of the

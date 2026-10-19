@@ -131,14 +131,14 @@ public class MobileBrowseActivity extends MobileActivity
      */
     private static final int[] PREFERRED_SECTION_IDS = {
             MediaGroup.TYPE_HOME,
+            MediaGroup.TYPE_MUSIC,
             MediaGroup.TYPE_SUBSCRIPTIONS,
-            MediaGroup.TYPE_HISTORY,
             VideoDownloads.SECTION_ID,
     };
     private static final int[] PREFERRED_SECTION_TITLE_RES = {
             R.string.header_home,
+            R.string.header_music,
             R.string.header_subscriptions,
-            R.string.header_history,
             R.string.header_downloads,
     };
 
@@ -264,6 +264,7 @@ public class MobileBrowseActivity extends MobileActivity
         setupYouPanel();
         setupErrorAction();
         setupSearchButton();
+        setupMusicHeader();
         setupCastButton();
 
         mPresenter = BrowsePresenter.instance(this);
@@ -835,6 +836,45 @@ public class MobileBrowseActivity extends MobileActivity
         mSearchButton.setOnClickListener(v -> SearchPresenter.instance(this).startSearch(null));
     }
 
+    // Music tab: search pill + filter chips above the list, shown only while Music is on screen.
+    private View mMusicHeader;
+    private final android.widget.TextView[] mMusicChips = new android.widget.TextView[4];
+
+    private void setupMusicHeader() {
+        mMusicHeader = findViewById(R.id.mobile_music_header);
+        findViewById(R.id.mobile_music_search).setOnClickListener(v -> SearchPresenter.instance(this).startSearch(null));
+        int[] ids = {R.id.music_chip_all, R.id.music_chip_songs, R.id.music_chip_playlists, R.id.music_chip_artists};
+        for (int i = 0; i < ids.length; i++) {
+            final int filter = i; // VideoCardAdapter.MUSIC_ALL..MUSIC_ARTISTS, in this order
+            mMusicChips[i] = findViewById(ids[i]);
+            mMusicChips[i].setOnClickListener(v -> {
+                mAdapter.setMusicFilter(filter);
+                paintMusicChips(filter);
+            });
+        }
+        paintMusicChips(VideoCardAdapter.MUSIC_ALL);
+    }
+
+    private void paintMusicChips(int selected) {
+        for (int i = 0; i < mMusicChips.length; i++) {
+            boolean on = i == selected;
+            mMusicChips[i].setBackgroundResource(on ? R.drawable.bg_music_chip_selected : R.drawable.bg_music_chip);
+            mMusicChips[i].setTextColor(getColor(on ? R.color.mobile_color_background : R.color.mobile_color_on_surface));
+        }
+    }
+
+    /** The Music section is drawn as a song list with its own header; every other section as cards. */
+    private void updateMusicMode(int sectionId) {
+        boolean music = sectionId == MediaGroup.TYPE_MUSIC;
+        if (mMusicHeader != null) {
+            mMusicHeader.setVisibility(music ? View.VISIBLE : View.GONE);
+        }
+        if (mAdapter != null) {
+            mAdapter.setMusicMode(music);
+            paintMusicChips(VideoCardAdapter.MUSIC_ALL);
+        }
+    }
+
     // ---------------------------------------------------------------------------------
     // Casting: top-bar entry point (same flow as the player's icon) + connected-state tint.
     //
@@ -1273,6 +1313,7 @@ public class MobileBrowseActivity extends MobileActivity
 
         boolean switched = mCurrentSectionId != sectionId;
         mCurrentSectionId = sectionId;
+        updateMusicMode(sectionId);
         paintCachedSnapshot(sectionId, switched);
         syncNavHighlight(sectionId);
 
@@ -2095,6 +2136,7 @@ public class MobileBrowseActivity extends MobileActivity
             hideYouPanel();
             boolean switched = mCurrentSectionId != section.getId();
             mCurrentSectionId = section.getId();
+            updateMusicMode(section.getId());
             paintCachedSnapshot(section.getId(), switched);
 
             // The section may not be one of the sections shown in the bottom nav - e.g. the
