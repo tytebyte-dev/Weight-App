@@ -228,7 +228,7 @@ final class BypassPages {
                         MobileSnackbar.show(context, R.string.bypass_updating);
                         controller.refreshSubscription(s, (n, error) -> {
                             MobileSnackbar.show(context, error != null ? context.getString(R.string.bypass_failed, error)
-                                    : context.getString(R.string.bypass_added_servers, n));
+                                    : context.getString(R.string.bypass_added_servers, n), null, null);
                             page.rebuild();
                         });
                     } else {
