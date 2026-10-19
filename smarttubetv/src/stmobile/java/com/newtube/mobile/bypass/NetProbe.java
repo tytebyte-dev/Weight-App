@@ -45,6 +45,25 @@ final class NetProbe {
         }
     }
 
+    /** Whether YouTube answers through the process's current route (the tunnel, if one is up). */
+    static boolean youtubeReachableNow() {
+        HttpURLConnection c = null;
+        try {
+            c = (HttpURLConnection) new URL(YOUTUBE_204).openConnection();
+            c.setConnectTimeout(6000);
+            c.setReadTimeout(6000);
+            c.setInstanceFollowRedirects(false);
+            int code = c.getResponseCode();
+            return code >= 200 && code < 400;
+        } catch (IOException e) {
+            return false;
+        } finally {
+            if (c != null) {
+                c.disconnect();
+            }
+        }
+    }
+
     /** True when a VPN (this app's or another) is the active network. */
     static boolean vpnActive(@NonNull Context context) {
         ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);

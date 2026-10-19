@@ -177,6 +177,13 @@ public final class BypassController {
         if (GeneralData.instance(mContext).isProxyEnabled()) {
             return false; // the user's own manual proxy wins
         }
+        if (settings.prefs().getLong("start_pending", 0) != 0) {
+            // The last automatic start never finished (the process died or hung): do not trap the
+            // user on the splash again; they can turn the bypass on by hand in the settings.
+            settings.prefs().edit().remove("start_pending").apply();
+            set(State.ERROR, Via.NONE, mContext.getString(R.string.bypass_error_tunnel));
+            return false;
+        }
         scheduleSubscriptionRefresh();
 
         boolean censored = isCensoredRegion(settings);
@@ -214,14 +221,43 @@ public final class BypassController {
                     mPendingReady = ready;
                 }
                 set(State.STARTING, Via.VPN, "");
+                markPending(true);
                 BypassVpnService.start(mContext);
                 return ready != null;
             }
             settings.setVpnConsentNeeded(true);
         }
-        // Local proxy: in-process, ready as soon as Xray is up.
-        startLocalNow();
-        return false;
+        // Local proxy: Xray starts off the main thread; the splash waits (at most the gate's limit).
+        markPending(true);
+        mIo.execute(() -> {
+            startLocalNow();
+            verifyOrGiveUp();
+            markPending(false);
+            if (ready != null) {
+                ready.run();
+            }
+        });
+        return ready != null;
+    }
+
+    private void markPending(boolean pending) {
+        android.content.SharedPreferences.Editor e = BypassSettings.instance(mContext).prefs().edit();
+        if (pending) {
+            e.putLong("start_pending", System.currentTimeMillis());
+        } else {
+            e.remove("start_pending");
+        }
+        e.commit();
+    }
+
+    /** An automatic tunnel must never leave the app worse off than no tunnel: drop it if it carries nothing. */
+    private void verifyOrGiveUp() {
+        if (mState != State.RUNNING || NetProbe.youtubeReachableNow()) {
+            return;
+        }
+        mUserStopped = false;
+        stopEverything();
+        set(State.ERROR, Via.NONE, mContext.getString(R.string.bypass_error_tunnel));
     }
 
     private boolean isCensoredRegion(BypassSettings settings) {
@@ -317,11 +353,16 @@ public final class BypassController {
             LocalProxyRuntime.stop(mContext); // the tunnel supersedes the fallback
         }
         set(State.RUNNING, Via.VPN, profileName);
-        runPendingReady();
+        mIo.execute(() -> {
+            verifyOrGiveUp();
+            markPending(false);
+            runPendingReady();
+        });
     }
 
     void onVpnFailed(String message) {
         set(State.ERROR, Via.NONE, message);
+        markPending(false);
         runPendingReady();
     }
 
