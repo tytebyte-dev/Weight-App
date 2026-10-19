@@ -73,22 +73,8 @@ for abi in "${ABIS[@]}"; do
   cp "$WORK/aar/jni/$abi/libgojni.so" "$OUT_JNI/$abi/libgojni.so"
 done
 
-echo "==> hev-socks5-tunnel via ndk-build"
-HEV="$HERE/hev-socks5-tunnel"
-mkdir -p "$WORK/hev"
-"$NDK/ndk-build" -j"$(nproc 2>/dev/null || echo 4)" \
-  NDK_PROJECT_PATH="$WORK/hev" \
-  APP_BUILD_SCRIPT="$HEV/Android.mk" \
-  NDK_APPLICATION_MK="$HEV/Application.mk" \
-  NDK_LIBS_OUT="$WORK/hev/libs" \
-  NDK_OUT="$WORK/hev/obj" \
-  APP_ABI="${ABIS[*]}" \
-  APP_PLATFORM="android-$API" \
-  REV_ID="2.19.0"
-for abi in "${ABIS[@]}"; do
-  mkdir -p "$OUT_JNI/$abi"
-  cp "$WORK/hev/libs/$abi/libhev-socks5-tunnel.so" "$OUT_JNI/$abi/libhev-socks5-tunnel.so"
-done
+# hev-socks5-tunnel (native/hev-socks5-tunnel) is vendored but not built: it only serves a TUN/VPN
+# mode, and the bypass runs as an in-app local proxy.
 
 echo "==> done"
 ls -l "$OUT_LIBS"/xraycore.jar "$OUT_JNI"/*/*.so

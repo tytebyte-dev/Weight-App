@@ -55,15 +55,6 @@ final class BypassPages {
                     }
                 }).summary(() -> statusLine(context, controller)));
 
-        if (controller.via() == BypassController.Via.LOCAL && settings.vpnConsentNeeded()) {
-            rows.add(SettingsRow.action(context.getString(R.string.bypass_grant_vpn),
-                    context.getString(R.string.bypass_grant_vpn_summary), page -> {
-                        settings.setMode(BypassSettings.MODE_APP_VPN);
-                        controller.disconnect(context);
-                        controller.connect(page.requireContext());
-                    }));
-        }
-
         rows.add(SettingsRow.header(context.getString(R.string.bypass_group_when)));
         rows.add(SettingsRow.<Integer>choice(context.getString(R.string.bypass_policy))
                 .option(context.getString(R.string.bypass_policy_auto), context.getString(R.string.bypass_policy_auto_desc),
@@ -80,18 +71,6 @@ final class BypassPages {
         rows.add(SettingsRow.toggle(context.getString(R.string.bypass_probe),
                 context.getString(R.string.bypass_probe_summary), settings::probeDirect, settings::setProbeDirect));
 
-        rows.add(SettingsRow.header(context.getString(R.string.bypass_group_how)));
-        rows.add(SettingsRow.<Integer>choice(context.getString(R.string.bypass_mode))
-                .option(context.getString(R.string.bypass_mode_app), context.getString(R.string.bypass_mode_app_desc),
-                        BypassSettings.MODE_APP_VPN)
-                .option(context.getString(R.string.bypass_mode_local), context.getString(R.string.bypass_mode_local_desc),
-                        BypassSettings.MODE_LOCAL_PROXY)
-                .option(context.getString(R.string.bypass_mode_device), context.getString(R.string.bypass_mode_device_desc),
-                        BypassSettings.MODE_DEVICE_VPN)
-                .bind(settings::mode, mode -> {
-                    settings.setMode(mode);
-                    controller.reconnectIfRunning(context);
-                }));
         rows.add(SettingsRow.page(context.getString(R.string.bypass_profiles),
                 () -> store.selected(settings).name, SettingsPages.BYPASS_PROFILES));
         rows.add(SettingsRow.page(context.getString(R.string.bypass_advanced),
@@ -104,8 +83,7 @@ final class BypassPages {
     private static CharSequence statusLine(Context context, BypassController c) {
         switch (c.state()) {
             case RUNNING:
-                return context.getString(c.via() == BypassController.Via.VPN ? R.string.bypass_status_running_vpn
-                        : R.string.bypass_status_running_local, c.detail());
+                return context.getString(R.string.bypass_status_running_local, c.detail());
             case STARTING:
                 return context.getString(R.string.bypass_status_starting);
             case ERROR:

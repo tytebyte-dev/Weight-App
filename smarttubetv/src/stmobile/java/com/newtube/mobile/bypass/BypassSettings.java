@@ -75,7 +75,7 @@ public final class BypassSettings {
     }
 
     public int mode() {
-        return mPrefs.getInt(MODE, MODE_APP_VPN);
+        return MODE_LOCAL_PROXY; // the bypass only ever runs as an in-app local proxy
     }
 
     public void setMode(int mode) {

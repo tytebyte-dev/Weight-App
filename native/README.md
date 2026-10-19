@@ -1,7 +1,7 @@
 # Native cores for the censorship bypass
 
 - `xray-core/` — Xray-core 26.3.27 (MPL-2.0), unmodified.
-- `hev-socks5-tunnel/` — hev-socks5-tunnel 2.19.0 (MIT), submodules merged.
+- `hev-socks5-tunnel/` — hev-socks5-tunnel 2.19.0 (MIT), vendored but not built: the bypass is an in-app local proxy, not a VPN.
 - `xraybridge/` — gomobile wrapper exposing start/stop/protect to Java.
 - `build-cores.sh` — builds both (needs Go, gomobile, `ANDROID_NDK_HOME`) into
   `smarttubetv/libs/xraycore.jar` and `smarttubetv/src/stmobile/jniLibs/<abi>/`.

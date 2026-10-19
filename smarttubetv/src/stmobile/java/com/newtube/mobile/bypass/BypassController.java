@@ -2,7 +2,6 @@ package com.newtube.mobile.bypass;
 
 import android.content.Context;
 import android.content.Intent;
-import android.net.VpnService;
 import android.os.Handler;
 import android.os.Looper;
 import android.telephony.TelephonyManager;
@@ -160,8 +159,7 @@ public final class BypassController {
             return mContext.getString(R.string.bypass_error_core_missing);
         }
         String v = XrayCore.version();
-        return "Xray " + v + (HevTunnel.isAvailable() ? " · hev-socks5-tunnel 2.19.0"
-                : " · " + mContext.getString(R.string.bypass_tunnel_missing));
+        return "Xray " + v;
     }
 
     // ---------------------------------------------------------------------------------------------
@@ -206,26 +204,6 @@ public final class BypassController {
         if (!XrayCore.isAvailable()) {
             set(State.ERROR, Via.NONE, mContext.getString(R.string.bypass_error_core_missing));
             return false;
-        }
-        int mode = settings.mode();
-        boolean vpn = mode != BypassSettings.MODE_LOCAL_PROXY && HevTunnel.isAvailable();
-        if (vpn) {
-            boolean consent;
-            try {
-                consent = VpnService.prepare(mContext) == null;
-            } catch (RuntimeException e) {
-                consent = false;
-            }
-            if (consent) {
-                synchronized (this) {
-                    mPendingReady = ready;
-                }
-                set(State.STARTING, Via.VPN, "");
-                markPending(true);
-                BypassVpnService.start(mContext);
-                return ready != null;
-            }
-            settings.setVpnConsentNeeded(true);
         }
         // Local proxy: Xray starts off the main thread; the splash waits (at most the gate's limit).
         markPending(true);
@@ -275,7 +253,7 @@ public final class BypassController {
     // User actions
     // ---------------------------------------------------------------------------------------------
 
-    /** Starts the tunnel in the saved mode, asking for VPN consent first if it is needed. */
+    /** Starts the in-app local proxy. */
     public void connect(@NonNull Context context) {
         mUserStopped = false;
         BypassSettings settings = BypassSettings.instance(mContext);
@@ -283,29 +261,8 @@ public final class BypassController {
             set(State.ERROR, Via.NONE, mContext.getString(R.string.bypass_error_core_missing));
             return;
         }
-        if (settings.mode() == BypassSettings.MODE_LOCAL_PROXY) {
-            set(State.STARTING, Via.LOCAL, "");
-            mIo.execute(this::startLocalNow);
-            return;
-        }
-        if (!HevTunnel.isAvailable()) {
-            set(State.ERROR, Via.NONE, mContext.getString(R.string.bypass_tunnel_missing));
-            return;
-        }
-        Intent consent;
-        try {
-            consent = VpnService.prepare(mContext);
-        } catch (RuntimeException e) {
-            set(State.ERROR, Via.NONE, mContext.getString(R.string.bypass_error_no_permission));
-            return;
-        }
-        if (consent == null) {
-            set(State.STARTING, Via.VPN, "");
-            BypassVpnService.start(mContext);
-        } else {
-            set(State.STARTING, Via.VPN, "");
-            context.startActivity(new Intent(context, VpnConsentActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
-        }
+        set(State.STARTING, Via.LOCAL, "");
+        mIo.execute(this::startLocalNow);
     }
 
     public void disconnect(@NonNull Context context) {
@@ -317,68 +274,22 @@ public final class BypassController {
     public void reconnectIfRunning(@NonNull Context context) {
         if (mState == State.RUNNING || mState == State.STARTING) {
             stopEverything();
-            mMain.postDelayed(() -> connect(context), 300);
+            connect(context); // queued behind the stop on the same worker thread
         }
     }
 
     private void stopEverything() {
-        if (LocalProxyRuntime.isActive()) {
-            LocalProxyRuntime.stop(mContext);
-        }
-        if (mVia == Via.VPN || mState == State.STARTING) {
-            BypassVpnService.stop(mContext);
-        }
         set(State.STOPPED, Via.NONE, "");
-    }
-
-    void onVpnConsentResult(@NonNull Context context, boolean granted) {
-        if (granted) {
-            BypassVpnService.start(mContext);
-        } else {
-            set(State.ERROR, Via.NONE, mContext.getString(R.string.bypass_error_no_permission));
-        }
-    }
-
-    // ---------------------------------------------------------------------------------------------
-    // Reports from the VPN service and the local runtime
-    // ---------------------------------------------------------------------------------------------
-
-    void onVpnStarting() {
-        set(State.STARTING, Via.VPN, "");
-    }
-
-    void onVpnRunning(String profileName) {
-        BypassSettings.instance(mContext).setVpnConsentNeeded(false);
-        if (LocalProxyRuntime.isActive()) {
-            LocalProxyRuntime.stop(mContext); // the tunnel supersedes the fallback
-        }
-        set(State.RUNNING, Via.VPN, profileName);
+        // Stopping the core can take a moment: never on the main thread, never allowed to throw.
         mIo.execute(() -> {
-            verifyOrGiveUp();
-            markPending(false);
-            runPendingReady();
+            try {
+                if (LocalProxyRuntime.isActive()) {
+                    LocalProxyRuntime.stop(mContext);
+                }
+            } catch (Throwable ignored) {
+                // already stopped
+            }
         });
-    }
-
-    void onVpnFailed(String message) {
-        set(State.ERROR, Via.NONE, message);
-        markPending(false);
-        runPendingReady();
-    }
-
-    void onVpnStopped() {
-        if (mState != State.ERROR) {
-            set(State.STOPPED, Via.NONE, "");
-        }
-    }
-
-    void onVpnRevoked() {
-        mUserStopped = true;
-        set(State.STOPPED, Via.NONE, "");
-    }
-
-    void onVpnStopRequested() {
-        mUserStopped = true;
     }
 
     private void runPendingReady() {
