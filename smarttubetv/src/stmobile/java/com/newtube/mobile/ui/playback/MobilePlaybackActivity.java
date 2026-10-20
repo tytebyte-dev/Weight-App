@@ -1690,6 +1690,11 @@ public class MobilePlaybackActivity extends MobileActivity
 
     @Override
     protected void onDestroy() {
+        // A really closed player (not a config change or a system kill): clean what was watched.
+        if (isFinishing()) {
+            noteWatchedProgress();
+            com.newtube.mobile.player.VideoCacheCleaner.onPlayerClosed(this, mWatchedIds);
+        }
         DownloadRegistry.instance(this).removeListener(mDownloadsListener);
         cancelAutoHide();
         mOrientationHandBack.disarm();
@@ -1984,6 +1989,20 @@ public class MobilePlaybackActivity extends MobileActivity
     }
 
     private boolean mMusicHidden;
+
+    /** Videos of this player session watched to the end; their cache goes when the player closes. */
+    private final java.util.Set<String> mWatchedIds = new java.util.HashSet<>();
+
+    private void noteWatchedProgress() {
+        String id = mWatchVideoId;
+        if (id == null || mExoPlayerController == null) {
+            return;
+        }
+        if (com.newtube.mobile.player.VideoCacheCleaner.isWatched(
+                mExoPlayerController.getPositionMs(), mExoPlayerController.getDurationMs(), mIsEnded)) {
+            mWatchedIds.add(id);
+        }
+    }
 
     private void hideForMusic() {
         mMusicHidden = true;
@@ -4493,6 +4512,9 @@ public class MobilePlaybackActivity extends MobileActivity
                 case Player.STATE_ENDED:
                     showProgressBar(false);
                     mIsEnded = true;
+                    if (mWatchVideoId != null) {
+                        mWatchedIds.add(mWatchVideoId); // played to the end: cache goes when the player closes
+                    }
                     // Surface the replay affordance - but NOT while in PiP: full-size controls would
                     // appear inside the tiny PiP window and onAutoHideTick would keep re-arming them
                     // (mIsEnded stays true), so they'd never hide. In PiP the RemoteAction handles it.
@@ -8705,6 +8727,7 @@ public class MobilePlaybackActivity extends MobileActivity
         if (item != null && item.videoId != null) {
             SessionWarmup.onPlaybackRequested();
             if (!Helpers.equals(item.videoId, mWatchVideoId)) {
+                noteWatchedProgress(); // the video being left may have been watched to the end
                 cancelClose(); // NEWTUBE(motion): a video picked while Back was closing this player
                 // NEWTUBE(motion): or while a host's X was closing its card - this session goes on.
                 MiniPlayerBridge.cancelClosing();

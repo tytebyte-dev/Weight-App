@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="cache_autoclean">Clear watched videos from the cache</string>
+    <string name="cache_autoclean_summary">After you close the player on a video you finished, its cached data is removed. Downloads are never touched.</string>
+</resources>

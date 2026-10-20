@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="cache_autoclean">Очищать кэш просмотренных видео</string>
+    <string name="cache_autoclean_summary">После закрытия плеера на досмотренном видео его кэш удаляется. Скачанные видео не затрагиваются.</string>
+</resources>
