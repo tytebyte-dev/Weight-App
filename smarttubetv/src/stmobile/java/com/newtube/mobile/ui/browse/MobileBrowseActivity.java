@@ -352,6 +352,18 @@ public class MobileBrowseActivity extends MobileActivity
     private void setSkeletonVisible(boolean visible) {
         if (visible) {
             mSkeletonShows++;
+            boolean music = mCurrentSectionId == MediaGroup.TYPE_MUSIC;
+            mFeedSkeleton.findViewById(R.id.skel_cards).setVisibility(music ? View.GONE : View.VISIBLE);
+            mFeedSkeleton.findViewById(R.id.skel_music).setVisibility(music ? View.VISIBLE : View.GONE);
+            boolean realHeader = mMusicHeader != null && mMusicHeader.getVisibility() == View.VISIBLE;
+            mFeedSkeleton.findViewById(R.id.skel_music_header).setVisibility(realHeader ? View.GONE : View.VISIBLE);
+            // The real header stays on screen: the rows start below it.
+            if (mSkeletonBasePadTop < 0) {
+                mSkeletonBasePadTop = mFeedSkeleton.getPaddingTop();
+            }
+            mFeedSkeleton.setPadding(mFeedSkeleton.getPaddingLeft(), mSkeletonBasePadTop
+                    + (music && realHeader ? mMusicHeader.getHeight() : 0),
+                    mFeedSkeleton.getPaddingRight(), mFeedSkeleton.getPaddingBottom());
             mFeedSkeleton.animate().cancel();
             mFeedSkeleton.setAlpha(1f);
             mFeedSkeleton.setVisibility(View.VISIBLE);
@@ -380,6 +392,7 @@ public class MobileBrowseActivity extends MobileActivity
 
     /** Counts skeleton shows, so a reveal waiting for its cards yields to a newer load. */
     private int mSkeletonShows;
+    private int mSkeletonBasePadTop = -1;
 
     // ---------------------------------------------------------------------------------
     // In-app mini-player bar
