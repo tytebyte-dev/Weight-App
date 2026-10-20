@@ -152,7 +152,7 @@
     <string name="mobile_signin_success">Вход выполнен!</string>
     <string name="mobile_signin_error">Не удалось выполнить вход. Проверьте подключение и повторите попытку — вы получите новый код.</string>
     <string name="mobile_signin_retry_button">Повторить</string>
-    <string name="mobile_signin_gms_hint">Есть microG или Google Play Services? Используйте аккаунт с этого устройства — код не нужен.</string>
+    <string name="mobile_signin_gms_hint">Есть microG? Используйте аккаунт с этого устройства — код не нужен.</string>
     <string name="mobile_signin_gms_button">Войти через аккаунт Google на устройстве</string>
     <string name="mobile_signin_gms_error">Не удалось войти через аккаунт на устройстве. Разрешите доступ, когда появится запрос, или используйте код.</string>
     <string name="mobile_accounts_title">Аккаунты</string>
