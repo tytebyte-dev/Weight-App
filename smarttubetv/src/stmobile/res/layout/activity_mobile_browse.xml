@@ -44,9 +44,21 @@
         android:textColor="@color/mobile_color_on_surface"
         android:textSize="22sp"
         android:textStyle="bold"
-        app:layout_constraintEnd_toStartOf="@id/mobile_cast_button"
+        app:layout_constraintEnd_toStartOf="@id/mobile_log_button"
         app:layout_constraintStart_toEndOf="@id/mobile_title_back"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <!-- Diagnostic log: shares the app's recent logcat (DiagnosticLog.share). -->
+    <ImageButton
+        android:id="@+id/mobile_log_button"
+        android:layout_width="48dp"
+        android:layout_height="@dimen/mobile_title_bar_height"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="@string/diagnostic_log_send"
+        android:padding="12dp"
+        android:src="@drawable/ic_mobile_logfile"
+        app:layout_constraintEnd_toStartOf="@id/mobile_cast_button"
+        app:layout_constraintTop_toTopOf="@id/mobile_title_bar" />
 
     <!-- Cast picker entry on the home feed, like the official app's top bar. Tinted with the
          accent while a session is connected (MobileBrowseActivity.updateCastIconTint). -->

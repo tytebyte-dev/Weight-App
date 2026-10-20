@@ -843,6 +843,8 @@ public class MobileBrowseActivity extends MobileActivity
      */
     private void setupSearchButton() {
         mSearchButton.setOnClickListener(v -> SearchPresenter.instance(this).startSearch(null));
+        findViewById(R.id.mobile_log_button).setOnClickListener(v ->
+                com.liskovsoft.smartyoutubetv2.common.misc.DiagnosticLog.share(this));
     }
 
     // Music tab: search pill + filter chips above the list, shown only while Music is on screen.
