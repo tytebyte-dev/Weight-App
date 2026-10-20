@@ -1,6 +1,6 @@
 name: Test build
 
-# Test (debug-signed) build of NewTube. Uploads five separate artifacts:
+# Test build (signed with signing/testkey.x509.pem) of NewTube. Uploads five separate artifacts:
 # arm64-v8a, armeabi-v7a, x86, x86_64 and one universal APK.
 # -PemulatorAbi adds the x86_64 split (see splits{} in smarttubetv/build.gradle).
 
@@ -63,6 +63,11 @@ jobs:
           export ANDROID_NDK_HOME="$ANDROID_HOME/ndk/27.2.12479018"
           chmod +x native/build-cores.sh
           native/build-cores.sh
+
+      - name: Prepare the signing key
+        env:
+          TESTKEY_PK8_B64: ${{ secrets.TESTKEY_PK8_B64 }}
+        run: .github/scripts/setup-signing.sh
 
       - name: Build debug APKs
         run: |
