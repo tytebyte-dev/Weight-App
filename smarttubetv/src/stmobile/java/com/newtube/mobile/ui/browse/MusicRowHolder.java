@@ -36,6 +36,7 @@ final class MusicRowHolder extends RecyclerView.ViewHolder {
     private final ImageButton mDownload;
     private final ImageButton mLike;
     private final ImageButton mMore;
+    private final EqualizerView mEq;
     private Video mVideo;
 
     MusicRowHolder(@NonNull View itemView, VideoCardAdapter.OnVideoClickListener clickListener) {
@@ -47,6 +48,7 @@ final class MusicRowHolder extends RecyclerView.ViewHolder {
         mDownload = itemView.findViewById(R.id.music_download);
         mLike = itemView.findViewById(R.id.music_like);
         mMore = itemView.findViewById(R.id.music_more);
+        mEq = itemView.findViewById(R.id.music_eq);
 
         itemView.setOnClickListener(v -> {
             if (mVideo != null && clickListener != null) {
@@ -102,6 +104,13 @@ final class MusicRowHolder extends RecyclerView.ViewHolder {
                 .load(video.getCardImageUrl())
                 .centerCrop()
                 .into(mArt);
+    }
+
+    /** The track that is playing gets the dancing bars over its cover. */
+    void bindNow(Video video, String nowId, boolean playing) {
+        boolean current = video != null && video.videoId != null && video.videoId.equals(nowId);
+        mEq.setVisibility(current ? View.VISIBLE : View.GONE);
+        mEq.setPlaying(current && playing);
     }
 
     private void showLiked(boolean liked) {

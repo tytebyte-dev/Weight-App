@@ -466,6 +466,14 @@ public class MobilePlaybackActivity extends MobileActivity
 
         setContentView(R.layout.activity_mobile_playback);
 
+        // Music tab: this screen is never shown. It starts see-through and untouchable, and
+        // minimizes itself once the stream is ready (see handleUiStateChange); a safety timeout
+        // gives the player back if that never happens.
+        if (MusicSession.isArmed()) {
+            hideForMusic();
+            getWindow().getDecorView().postDelayed(this::musicArmTimeout, 12_000);
+        }
+
         // NEWTUBE(motion): Back minimizes like YouTube, and the back gesture previews it (the video
         // shrinks toward the mini card with the finger). Added here, before the comments panel's
         // callback, so an open panel still takes Back first.
@@ -1439,6 +1447,14 @@ public class MobilePlaybackActivity extends MobileActivity
     protected void onResume() {
         super.onResume();
 
+        if (mMusicHidden && !MusicSession.isArmed()) {
+            // Shown again (the bar was tapped): an ordinary player from here on.
+            showAfterMusic();
+            MusicSession.end();
+        } else if (!mMusicHidden && !MusicSession.isArmed()) {
+            MusicSession.end(); // opened normally: no music bar for this session
+        }
+
         PlayerTransitionBridge.LaunchSnapshot launch = PlayerTransitionBridge.take();
 
         mIsResumed = true;
@@ -1965,6 +1981,43 @@ public class MobilePlaybackActivity extends MobileActivity
             mBackPreview = false;
             animateMorph(0f, 180, Motion.STANDARD, this::resetMorph);
         }
+    }
+
+    private boolean mMusicHidden;
+
+    private void hideForMusic() {
+        mMusicHidden = true;
+        getWindow().getDecorView().setAlpha(0f);
+        getWindow().addFlags(android.view.WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+    }
+
+    private void showAfterMusic() {
+        mMusicHidden = false;
+        getWindow().getDecorView().setAlpha(1f);
+        getWindow().clearFlags(android.view.WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+    }
+
+    /** The stream never became ready: stop hiding, let the user see the player. */
+    private void musicArmTimeout() {
+        if (isFinishing() || isDestroyed() || !MusicSession.isArmed()) {
+            return;
+        }
+        MusicSession.end();
+        showAfterMusic();
+    }
+
+    /** The stream is ready: minimize now, and show the player after all if that did not happen. */
+    private void minimizeForMusic() {
+        if (isFinishing() || isDestroyed() || !mMusicHidden) {
+            return;
+        }
+        minimizeByDrag();
+        getWindow().getDecorView().postDelayed(() -> {
+            if (!isFinishing() && !isDestroyed() && mIsResumed && mMusicHidden) {
+                MusicSession.end();
+                showAfterMusic();
+            }
+        }, 2_000);
     }
 
     private void minimizeByBack() {
@@ -4402,6 +4455,9 @@ public class MobilePlaybackActivity extends MobileActivity
                 case Player.STATE_READY:
                     showProgressBar(false);
                     mIsEnded = false;
+                    if (MusicSession.consumeArmed()) {
+                        getWindow().getDecorView().post(MobilePlaybackActivity.this::minimizeForMusic);
+                    }
                     // CASTING: the TV owns playback while a session is active - the local engine
                     // may load/buffer (so disconnect can resume instantly) but must never audibly
                     // play. Re-pause the moment any (re)load reaches READY.
@@ -4460,6 +4516,10 @@ public class MobilePlaybackActivity extends MobileActivity
 
         @Override
         public void onPlayerError(PlaybackException error) {
+            if (mMusicHidden && MusicSession.isArmed()) {
+                MusicSession.end();
+                showAfterMusic();
+            }
             releaseWatchMetadata();
             // Never leave the loading still covering an error state.
             mStillAwaitReady = false;

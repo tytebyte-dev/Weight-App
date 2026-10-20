@@ -46,6 +46,22 @@ public class VideoCardAdapter extends ListAdapter<Video, RecyclerView.ViewHolder
     public static final int MUSIC_PLAYLISTS = 2;
     public static final int MUSIC_ARTISTS = 3;
 
+    private String mNowId;
+    private boolean mNowPlaying;
+    private static final Object PAYLOAD_NOW = new Object();
+
+    /** Which track the music bar is on (null = none) and whether it is actually playing. */
+    public void setNowPlaying(String videoId, boolean playing) {
+        if (java.util.Objects.equals(mNowId, videoId) && mNowPlaying == playing) {
+            return;
+        }
+        mNowId = videoId;
+        mNowPlaying = playing;
+        if (mMusicMode && getItemCount() > 0) {
+            notifyItemRangeChanged(0, getItemCount(), PAYLOAD_NOW);
+        }
+    }
+
     private boolean mMusicMode;
     private int mMusicFilter = MUSIC_ALL;
     private java.util.List<Video> mSource = java.util.Collections.emptyList();
@@ -186,6 +202,7 @@ public class VideoCardAdapter extends ListAdapter<Video, RecyclerView.ViewHolder
             ((ChannelViewHolder) holder).bind(getItem(position), mLongClickListener);
         } else if (holder instanceof MusicRowHolder) {
             ((MusicRowHolder) holder).bind(getItem(position), mLongClickListener);
+            ((MusicRowHolder) holder).bindNow(getItem(position), mNowId, mNowPlaying);
         } else {
             ((VideoViewHolder) holder).bind(getItem(position), mLongClickListener);
         }
@@ -236,7 +253,9 @@ public class VideoCardAdapter extends ListAdapter<Video, RecyclerView.ViewHolder
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position,
             @NonNull java.util.List<Object> payloads) {
-        if (!payloads.isEmpty() && holder instanceof VideoViewHolder) {
+        if (!payloads.isEmpty() && holder instanceof MusicRowHolder && payloads.contains(PAYLOAD_NOW)) {
+            ((MusicRowHolder) holder).bindNow(getItem(position), mNowId, mNowPlaying);
+        } else if (!payloads.isEmpty() && holder instanceof VideoViewHolder) {
             ((VideoViewHolder) holder).bindPartial(getItem(position));
         } else {
             super.onBindViewHolder(holder, position, payloads);

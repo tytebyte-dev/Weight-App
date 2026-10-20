@@ -146,6 +146,110 @@
         </HorizontalScrollView>
     </LinearLayout>
 
+    <!-- Music mini-player: replaces the video card while a Music-tab track plays. -->
+    <LinearLayout
+        android:id="@+id/mobile_music_bar"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@color/mobile_color_field"
+        android:clickable="true"
+        android:focusable="true"
+        android:orientation="vertical"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@id/mobile_bottom_nav"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <ProgressBar
+            android:id="@+id/music_bar_progress"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:max="1000"
+            android:progressBackgroundTint="@color/mobile_color_progress_track"
+            android:progressTint="@color/mobile_color_primary" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingStart="12dp">
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                app:cardBackgroundColor="@color/mobile_color_placeholder"
+                app:cardCornerRadius="6dp"
+                app:cardElevation="0dp">
+
+                <ImageView
+                    android:id="@+id/music_bar_art"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:contentDescription="@null"
+                    android:scaleType="centerCrop" />
+            </com.google.android.material.card.MaterialCardView>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/music_bar_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:fontFamily="sans-serif-medium"
+                    android:maxLines="1"
+                    android:textColor="@color/mobile_color_on_surface"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/music_bar_artist"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:textColor="@color/mobile_color_on_surface_secondary"
+                    android:textSize="12sp" />
+            </LinearLayout>
+
+            <ImageButton
+                android:id="@+id/music_bar_play"
+                android:layout_width="44dp"
+                android:layout_height="48dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="@string/mobile_mini_play_pause"
+                android:padding="10dp"
+                android:src="@drawable/ic_player_pause"
+                android:tint="@color/mobile_color_on_surface" />
+
+            <ImageButton
+                android:id="@+id/music_bar_next"
+                android:layout_width="44dp"
+                android:layout_height="48dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="@string/music_next"
+                android:padding="10dp"
+                android:src="@drawable/ic_player_next"
+                android:tint="@color/mobile_color_on_surface" />
+
+            <ImageButton
+                android:id="@+id/music_bar_close"
+                android:layout_width="44dp"
+                android:layout_height="48dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="@string/mobile_mini_close"
+                android:padding="12dp"
+                android:src="@drawable/ic_sheet_close"
+                android:tint="@color/mobile_color_on_surface_secondary" />
+        </LinearLayout>
+    </LinearLayout>
+
     <!-- Pull-to-refresh drives BrowsePresenter.refresh() - also the natural retry
          gesture when a section shows the error placeholder (the error overlay doesn't
          consume touches, so the pull still reaches this layout). -->

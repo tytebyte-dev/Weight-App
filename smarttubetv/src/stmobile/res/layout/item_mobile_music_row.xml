@@ -28,6 +28,12 @@
             android:layout_height="match_parent"
             android:contentDescription="@null"
             android:scaleType="centerCrop" />
+
+        <com.newtube.mobile.ui.browse.EqualizerView
+            android:id="@+id/music_eq"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone" />
     </com.google.android.material.card.MaterialCardView>
 
     <LinearLayout

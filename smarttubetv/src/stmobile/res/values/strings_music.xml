@@ -9,4 +9,5 @@
     <string name="music_like">Like</string>
     <string name="music_like_signin">Sign in to like songs</string>
     <string name="music_like_failed">Could not save the like</string>
+    <string name="music_next">Next</string>
 </resources>
