@@ -1517,7 +1517,11 @@ public class MobileBrowseActivity extends MobileActivity
         // Music tab: a song never opens the player. With a live session the song is handed to it
         // and only the bar changes; otherwise the player opens invisible and minimizes itself
         // (MusicSession), leaving the compact music bar.
-        if (mCurrentSectionId == MediaGroup.TYPE_MUSIC && video.videoId != null && !video.isChannel()) {
+        boolean musicTap = mCurrentSectionId == MediaGroup.TYPE_MUSIC && video.videoId != null && !video.isChannel();
+        if (!musicTap) {
+            MusicSession.end(); // an ordinary video replaces any music session
+        }
+        if (musicTap) {
             if (MiniPlayerBridge.isActive()) {
                 mPresenter.onVideoItemSelected(video);
                 MusicSession.markMusic();

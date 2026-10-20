@@ -1448,11 +1448,9 @@ public class MobilePlaybackActivity extends MobileActivity
         super.onResume();
 
         if (mMusicHidden && mMusicMinimized) {
-            // Shown again (the bar was tapped): an ordinary player from here on.
+            // Shown again (the bar was tapped): a normal player now, but the session stays a
+            // Music one so minimizing brings the music bar back.
             showAfterMusic();
-            MusicSession.end();
-        } else if (!mMusicHidden && !MusicSession.isArmed()) { // (a fast READY may have cleared "armed" before the first onResume: hidden + not minimized yet stays hidden)
-            MusicSession.end(); // opened normally: no music bar for this session
         }
 
         PlayerTransitionBridge.LaunchSnapshot launch = PlayerTransitionBridge.take();
@@ -1990,6 +1988,7 @@ public class MobilePlaybackActivity extends MobileActivity
 
     private boolean mMusicHidden;
     private boolean mMusicMinimized;
+    private int mMusicRetries;
 
     /** Videos of this player session watched to the end; their cache goes when the player closes. */
     private final java.util.Set<String> mWatchedIds = new java.util.HashSet<>();
@@ -2032,6 +2031,11 @@ public class MobilePlaybackActivity extends MobileActivity
         if (isFinishing() || isDestroyed() || !mMusicHidden) {
             return;
         }
+        if (!mIsResumed && mMusicRetries++ < 60) { // not on screen yet: minimizing now would be lost
+            getWindow().getDecorView().postDelayed(this::minimizeForMusic, 100);
+            return;
+        }
+        mMusicRetries = 0;
         mMusicMinimized = true;
         minimizeByDrag();
         getWindow().getDecorView().postDelayed(() -> {
