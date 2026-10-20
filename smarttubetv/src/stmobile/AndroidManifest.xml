@@ -330,6 +330,13 @@
             android:screenOrientation="unspecified"
             android:theme="@style/Theme.NewTube" />
 
+        <activity
+            android:name="com.newtube.mobile.ui.settings.MobileStorageActivity"
+            android:exported="false"
+            android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation|layoutDirection|keyboardHidden|uiMode"
+            android:screenOrientation="unspecified"
+            android:theme="@style/Theme.NewTube" />
+
     </application>
 
 </manifest>

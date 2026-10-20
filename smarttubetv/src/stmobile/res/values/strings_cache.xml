@@ -2,4 +2,14 @@
 <resources>
     <string name="cache_autoclean">Clear watched videos from the cache</string>
     <string name="cache_autoclean_summary">After you close the player on a video you finished, its cached data is removed. Downloads are never touched.</string>
+    <string name="storage_title">Storage usage</string>
+    <string name="storage_subtitle">The app\'s own cache. Downloaded videos are not included.</string>
+    <string name="storage_video">Video</string>
+    <string name="storage_images">Pictures</string>
+    <string name="storage_other">Other</string>
+    <string name="storage_clear">Clear cache %1$s</string>
+    <string name="storage_cleared">Freed %1$s</string>
+    <string name="storage_note">Cleared data is downloaded again when it is needed. Videos in the Downloads tab are never touched.</string>
+    <string name="storage_entry">Storage usage</string>
+    <string name="storage_entry_summary">See what the cache holds and clear it</string>
 </resources>

@@ -81,6 +81,50 @@ public final class VideoCacheCleaner {
         IO.execute(() -> processPending(app));
     }
 
+    /** Bytes the streaming video cache holds on disk (0 if it is not available). */
+    public static long cacheBytes(@NonNull Context context) {
+        Cache cache = Media3PlayerCache.get(context);
+        return cache != null ? cache.getCacheSpace() : 0;
+    }
+
+    /**
+     * Drops everything in the streaming cache except the video a live player session is on and
+     * anything belonging to a download. Blocking: call off the main thread.
+     */
+    public static void clearAll(@NonNull Context context) {
+        Cache cache = Media3PlayerCache.get(context);
+        if (cache == null) {
+            return;
+        }
+        Set<String> keep = new HashSet<>();
+        Video playing = MiniPlayerBridge.isActive() ? MiniPlayerBridge.getVideo() : null;
+        if (playing != null && playing.videoId != null) {
+            keep.add("yt." + playing.videoId + ".");
+        }
+        for (DownloadItem item : DownloadRegistry.instance(context).items()) {
+            keep.add("yt." + item.videoId + ".");
+        }
+        try {
+            for (String key : new ArrayList<>(cache.getKeys())) {
+                boolean skip = false;
+                for (String prefix : keep) {
+                    if (key.startsWith(prefix)) {
+                        skip = true;
+                        break;
+                    }
+                }
+                if (!skip) {
+                    cache.removeResource(key);
+                }
+            }
+        } catch (RuntimeException e) {
+            Log.e(TAG, "Cannot clear the cache: " + e.getMessage());
+        }
+        synchronized (VideoCacheCleaner.class) {
+            prefs(context).edit().remove(KEY_PENDING).apply();
+        }
+    }
+
     /** Cleans what an earlier run left waiting (call once at app start, off the main thread's critical path). */
     public static void sweepPending(@NonNull Context context) {
         Context app = context.getApplicationContext();
