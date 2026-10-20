@@ -1447,11 +1447,11 @@ public class MobilePlaybackActivity extends MobileActivity
     protected void onResume() {
         super.onResume();
 
-        if (mMusicHidden && !MusicSession.isArmed()) {
+        if (mMusicHidden && mMusicMinimized) {
             // Shown again (the bar was tapped): an ordinary player from here on.
             showAfterMusic();
             MusicSession.end();
-        } else if (!mMusicHidden && !MusicSession.isArmed()) {
+        } else if (!mMusicHidden && !MusicSession.isArmed()) { // (a fast READY may have cleared "armed" before the first onResume: hidden + not minimized yet stays hidden)
             MusicSession.end(); // opened normally: no music bar for this session
         }
 
@@ -1989,6 +1989,7 @@ public class MobilePlaybackActivity extends MobileActivity
     }
 
     private boolean mMusicHidden;
+    private boolean mMusicMinimized;
 
     /** Videos of this player session watched to the end; their cache goes when the player closes. */
     private final java.util.Set<String> mWatchedIds = new java.util.HashSet<>();
@@ -2012,6 +2013,7 @@ public class MobilePlaybackActivity extends MobileActivity
 
     private void showAfterMusic() {
         mMusicHidden = false;
+        mMusicMinimized = false;
         getWindow().getDecorView().setAlpha(1f);
         getWindow().clearFlags(android.view.WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
     }
@@ -2030,6 +2032,7 @@ public class MobilePlaybackActivity extends MobileActivity
         if (isFinishing() || isDestroyed() || !mMusicHidden) {
             return;
         }
+        mMusicMinimized = true;
         minimizeByDrag();
         getWindow().getDecorView().postDelayed(() -> {
             if (!isFinishing() && !isDestroyed() && mIsResumed && mMusicHidden) {

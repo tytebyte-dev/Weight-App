@@ -153,6 +153,7 @@
         android:layout_height="wrap_content"
         android:background="@color/mobile_color_field"
         android:clickable="true"
+        android:elevation="12dp"
         android:focusable="true"
         android:orientation="vertical"
         android:visibility="gone"

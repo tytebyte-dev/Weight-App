@@ -897,7 +897,12 @@ public class MobileBrowseActivity extends MobileActivity
     }
 
     private void showMusicBar(ExoPlayer player) {
+        mMusicBar.animate().cancel();
+        mMusicBar.setAlpha(1f);
+        mMusicBar.setTranslationX(0f);
         mMusicBar.setVisibility(View.VISIBLE);
+        mMusicBar.bringToFront(); // above the list, never under it
+        mMusicBar.requestLayout();
         Utils.removeCallbacks(mMusicTick);
         onMusicTick();
     }
