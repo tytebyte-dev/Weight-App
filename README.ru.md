@@ -21,6 +21,8 @@ Weight App — клиент YouTube с сенсорным интерфейсом
 > **Неофициальный.** Проект независим. Он не связан с Google, YouTube и разработчиком SmartTube,
 > не спонсируется и не одобрен ими. YouTube и Android — товарные знаки Google LLC.
 
+<p align="center"><img src="docs/screenshot.jpg" alt="Weight App: главная, вкладка «Музыка», вход и настройки обхода" width="100%"></p>
+
 ## Содержание
 
 - [Возможности](#возможности)

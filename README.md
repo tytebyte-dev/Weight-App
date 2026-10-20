@@ -20,6 +20,8 @@ saving, a Music tab and a built-in censorship bypass that runs entirely inside t
 > **Unofficial.** The project is independent. It is not affiliated with, sponsored or endorsed by
 > Google, YouTube or SmartTube's developer. YouTube and Android are trademarks of Google LLC.
 
+<p align="center"><img src="docs/screenshot.jpg" alt="Weight App: home feed, Music tab, sign-in and bypass settings" width="100%"></p>
+
 ## Contents
 
 - [Features](#features)
