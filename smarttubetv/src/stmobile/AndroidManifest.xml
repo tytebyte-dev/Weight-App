@@ -44,7 +44,6 @@
          primitives, which only the Vibrator plays - View.performHapticFeedback has no way to ask
          for them. Normal, auto-granted permission. -->
     <uses-permission android:name="android.permission.VIBRATE" />
-
     <!-- The in-app updater hands its APK straight to Android's installer (AppUpdates.systemInstaller):
          from Android 11 these queries make the installers visible, so apps that also open APK files
          do not turn the install into an "Open with" chooser. -->
@@ -327,6 +326,13 @@
             android:name="com.newtube.mobile.ui.adddevice.MobileAddDeviceActivity"
             android:exported="false"
             android:launchMode="singleTop"
+            android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation|layoutDirection|keyboardHidden|uiMode"
+            android:screenOrientation="unspecified"
+            android:theme="@style/Theme.NewTube" />
+
+        <activity
+            android:name="com.newtube.mobile.ui.settings.MobileStorageActivity"
+            android:exported="false"
             android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation|layoutDirection|keyboardHidden|uiMode"
             android:screenOrientation="unspecified"
             android:theme="@style/Theme.NewTube" />

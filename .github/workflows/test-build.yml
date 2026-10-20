@@ -56,6 +56,14 @@ jobs:
           set -euo pipefail
           (yes || true) | "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" "ndk;$NDK_VERSION" > /dev/null
 
+      - name: Build bypass cores (Xray via gomobile, hev-socks5-tunnel)
+        run: |
+          set -euo pipefail
+          (yes || true) | "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" "ndk;27.2.12479018" > /dev/null
+          export ANDROID_NDK_HOME="$ANDROID_HOME/ndk/27.2.12479018"
+          chmod +x native/build-cores.sh
+          native/build-cores.sh
+
       - name: Build debug APKs
         run: |
           set -euo pipefail

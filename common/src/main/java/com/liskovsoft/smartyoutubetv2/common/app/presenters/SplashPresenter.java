@@ -27,6 +27,7 @@ import com.liskovsoft.smartyoutubetv2.common.misc.StreamReminderService;
 import com.liskovsoft.smartyoutubetv2.common.prefs.AccountsData;
 import com.liskovsoft.smartyoutubetv2.common.prefs.GeneralData;
 import com.liskovsoft.smartyoutubetv2.common.proxy.ProxyManager;
+import com.liskovsoft.smartyoutubetv2.common.proxy.StartupGate;
 import com.liskovsoft.smartyoutubetv2.common.utils.IntentExtractor;
 import com.liskovsoft.smartyoutubetv2.common.utils.SimpleEditDialog;
 import com.liskovsoft.smartyoutubetv2.common.utils.Utils;
@@ -80,9 +81,17 @@ public class SplashPresenter extends BasePresenter<SplashView> {
 
         Utils.cancelFinishTheApp(getContext());
 
-        runOnceTasks();
-        runPerInstanceTasks();
-        runPerViewTasks();
+        // The phone flavor may hold the first network use until its censorship-bypass tunnel is up;
+        // without a gate (or once it has let the first start through) this runs right here.
+        StartupGate.run(getContext(), () -> {
+            if (getView() == null) {
+                return; // the splash was closed while waiting
+            }
+
+            runOnceTasks();
+            runPerInstanceTasks();
+            runPerViewTasks();
+        });
     }
 
     private void runOnceTasks() {

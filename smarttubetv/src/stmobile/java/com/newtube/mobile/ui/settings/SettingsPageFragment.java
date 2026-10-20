@@ -26,6 +26,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.liskovsoft.smartyoutubetv2.common.utils.Utils;
 import com.liskovsoft.smartyoutubetv2.tv.R;
+import com.newtube.mobile.bypass.BypassController;
 import com.newtube.mobile.ui.common.MobileSnackbar;
 
 import java.util.List;
@@ -49,6 +50,8 @@ public final class SettingsPageFragment extends Fragment implements SettingsAdap
     private TextView mTitle;
     @Nullable private AlertDialog mDialog;
     @Nullable private String mHighlight;
+    /** The bypass pages show live status: they redraw when the tunnel changes state. */
+    private final BypassController.Listener mBypassListener = this::rebuild;
 
     public static SettingsPageFragment newInstance(@NonNull String pageId) {
         return newInstance(pageId, null);
@@ -158,6 +161,17 @@ public final class SettingsPageFragment extends Fragment implements SettingsAdap
         super.onResume();
         // A sheet or another page may have changed a value; same rows, so they rebind in place.
         rebuild();
+        if (mPageId.startsWith(SettingsPages.BYPASS)) {
+            BypassController.instance(requireContext()).addListener(mBypassListener);
+        }
+    }
+
+    @Override
+    public void onPause() {
+        if (getContext() != null) {
+            BypassController.instance(requireContext()).removeListener(mBypassListener);
+        }
+        super.onPause();
     }
 
     @Override

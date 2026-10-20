@@ -48,6 +48,19 @@ public class RelatedVideoAdapter extends ListAdapter<Video, RelatedVideoAdapter.
         void onRelatedPress(Video video);
     }
 
+    /** Three-dots tap on a row; null = no button. */
+    public interface OnRelatedMenuListener {
+        void onRelatedMenu(Video video);
+    }
+
+    @androidx.annotation.Nullable
+    private OnRelatedMenuListener mMenuListener;
+
+    public void setMenuListener(@androidx.annotation.Nullable OnRelatedMenuListener listener) {
+        mMenuListener = listener;
+        notifyDataSetChanged();
+    }
+
     private final OnRelatedClickListener mClickListener;
     @androidx.annotation.Nullable
     private final OnRelatedPressListener mPressListener;
@@ -114,6 +127,7 @@ public class RelatedVideoAdapter extends ListAdapter<Video, RelatedVideoAdapter.
         boolean isCurrent = mCurrentVideoId != null && video != null
                 && mCurrentVideoId.equals(video.videoId);
         holder.bind(video, isCurrent);
+        holder.bindMenu(video, mMenuListener);
     }
 
     @Override
@@ -128,7 +142,20 @@ public class RelatedVideoAdapter extends ListAdapter<Video, RelatedVideoAdapter.
         private final ProgressBar mWatchProgress;
         private final TextView mTitle;
         private final TextView mSubtitle;
+        private final View mOverflow;
         private Video mVideo;
+
+        void bindMenu(Video video, @androidx.annotation.Nullable OnRelatedMenuListener listener) {
+            if (mOverflow == null) {
+                return;
+            }
+            mOverflow.setVisibility(listener == null || video == null ? View.GONE : View.VISIBLE);
+            mOverflow.setOnClickListener(v -> {
+                if (mVideo != null && listener != null) {
+                    listener.onRelatedMenu(mVideo);
+                }
+            });
+        }
 
         @SuppressLint("ClickableViewAccessibility") // observes only; the row's click still runs
         RelatedViewHolder(@NonNull View itemView, OnRelatedClickListener clickListener,
@@ -140,6 +167,7 @@ public class RelatedVideoAdapter extends ListAdapter<Video, RelatedVideoAdapter.
             mWatchProgress = itemView.findViewById(R.id.related_watch_progress);
             mTitle = itemView.findViewById(R.id.related_title);
             mSubtitle = itemView.findViewById(R.id.related_subtitle);
+            mOverflow = itemView.findViewById(R.id.related_overflow);
 
             itemView.setOnClickListener(v -> {
                 if (mVideo != null && clickListener != null) {

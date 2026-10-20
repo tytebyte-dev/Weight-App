@@ -77,3 +77,7 @@ tools/ui-audit/
 # release signing (never commit)
 keystore.properties
 *.jks
+
+# Native cores built by native/build-cores.sh
+smarttubetv/libs/xraycore.jar
+smarttubetv/src/stmobile/jniLibs/

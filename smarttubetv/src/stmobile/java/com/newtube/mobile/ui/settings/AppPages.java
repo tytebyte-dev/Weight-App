@@ -77,6 +77,16 @@ final class AppPages {
                 context.getString(R.string.mobile_settings_24_hour_summary),
                 generalData::is24HourLocaleEnabled, generalData::set24HourLocaleEnabled).needsRestart());
 
+        rows.add(SettingsRow.toggle(context.getString(R.string.cache_autoclean),
+                context.getString(R.string.cache_autoclean_summary),
+                () -> com.newtube.mobile.player.VideoCacheCleaner.isEnabled(context),
+                on -> com.newtube.mobile.player.VideoCacheCleaner.setEnabled(context, on)));
+
+        rows.add(SettingsRow.action(context.getString(R.string.storage_entry),
+                context.getString(R.string.storage_entry_summary),
+                page -> page.requireContext().startActivity(
+                        new android.content.Intent(page.requireContext(), MobileStorageActivity.class))));
+
         return new SettingsPages.Page(context.getString(R.string.mobile_settings_general), rows);
     }
 

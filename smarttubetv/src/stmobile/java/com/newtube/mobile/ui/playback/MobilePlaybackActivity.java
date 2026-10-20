@@ -466,6 +466,14 @@ public class MobilePlaybackActivity extends MobileActivity
 
         setContentView(R.layout.activity_mobile_playback);
 
+        // Music tab: this screen is never shown. It starts see-through and untouchable, and
+        // minimizes itself once the stream is ready (see handleUiStateChange); a safety timeout
+        // gives the player back if that never happens.
+        if (MusicSession.isArmed()) {
+            hideForMusic();
+            getWindow().getDecorView().postDelayed(this::musicArmTimeout, 12_000);
+        }
+
         // NEWTUBE(motion): Back minimizes like YouTube, and the back gesture previews it (the video
         // shrinks toward the mini card with the finger). Added here, before the comments panel's
         // callback, so an open panel still takes Back first.
@@ -997,6 +1005,8 @@ public class MobilePlaybackActivity extends MobileActivity
         // dozen rows while the video starts) that empty frame stayed up ~1 s.
         mWatchRelated.setItemAnimator(null);
         mWatchRelated.setAdapter(mRelatedAdapter);
+        mRelatedAdapter.setMenuListener(video -> com.liskovsoft.smartyoutubetv2.common.app.presenters.dialogs.menu.VideoMenuPresenter
+                .instance(this).showMenu(video, (item, action) -> { }));
 
         // Queue list: same row layout and same click routing as Up next, but it scrolls INSIDE the
         // card (nested scrolling on + a max height) so a long playlist can't push the rest of the
@@ -1437,6 +1447,12 @@ public class MobilePlaybackActivity extends MobileActivity
     protected void onResume() {
         super.onResume();
 
+        if (mMusicHidden && mMusicMinimized) {
+            // Shown again (the bar was tapped): a normal player now, but the session stays a
+            // Music one so minimizing brings the music bar back.
+            showAfterMusic();
+        }
+
         PlayerTransitionBridge.LaunchSnapshot launch = PlayerTransitionBridge.take();
 
         mIsResumed = true;
@@ -1672,6 +1688,11 @@ public class MobilePlaybackActivity extends MobileActivity
 
     @Override
     protected void onDestroy() {
+        // A really closed player (not a config change or a system kill): clean what was watched.
+        if (isFinishing()) {
+            noteWatchedProgress();
+            com.newtube.mobile.player.VideoCacheCleaner.onPlayerClosed(this, mWatchedIds);
+        }
         DownloadRegistry.instance(this).removeListener(mDownloadsListener);
         cancelAutoHide();
         mOrientationHandBack.disarm();
@@ -1963,6 +1984,66 @@ public class MobilePlaybackActivity extends MobileActivity
             mBackPreview = false;
             animateMorph(0f, 180, Motion.STANDARD, this::resetMorph);
         }
+    }
+
+    private boolean mMusicHidden;
+    private boolean mMusicMinimized;
+    private int mMusicRetries;
+
+    /** Videos of this player session watched to the end; their cache goes when the player closes. */
+    private final java.util.Set<String> mWatchedIds = new java.util.HashSet<>();
+
+    private void noteWatchedProgress() {
+        String id = mWatchVideoId;
+        if (id == null || mExoPlayerController == null) {
+            return;
+        }
+        if (com.newtube.mobile.player.VideoCacheCleaner.isWatched(
+                mExoPlayerController.getPositionMs(), mExoPlayerController.getDurationMs(), mIsEnded)) {
+            mWatchedIds.add(id);
+        }
+    }
+
+    private void hideForMusic() {
+        mMusicHidden = true;
+        getWindow().getDecorView().setAlpha(0f);
+        getWindow().addFlags(android.view.WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+    }
+
+    private void showAfterMusic() {
+        mMusicHidden = false;
+        mMusicMinimized = false;
+        getWindow().getDecorView().setAlpha(1f);
+        getWindow().clearFlags(android.view.WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+    }
+
+    /** The stream never became ready: stop hiding, let the user see the player. */
+    private void musicArmTimeout() {
+        if (isFinishing() || isDestroyed() || !MusicSession.isArmed()) {
+            return;
+        }
+        MusicSession.end();
+        showAfterMusic();
+    }
+
+    /** The stream is ready: minimize now, and show the player after all if that did not happen. */
+    private void minimizeForMusic() {
+        if (isFinishing() || isDestroyed() || !mMusicHidden) {
+            return;
+        }
+        if (!mIsResumed && mMusicRetries++ < 60) { // not on screen yet: minimizing now would be lost
+            getWindow().getDecorView().postDelayed(this::minimizeForMusic, 100);
+            return;
+        }
+        mMusicRetries = 0;
+        mMusicMinimized = true;
+        minimizeByDrag();
+        getWindow().getDecorView().postDelayed(() -> {
+            if (!isFinishing() && !isDestroyed() && mIsResumed && mMusicHidden) {
+                MusicSession.end();
+                showAfterMusic();
+            }
+        }, 2_000);
     }
 
     private void minimizeByBack() {
@@ -4400,6 +4481,9 @@ public class MobilePlaybackActivity extends MobileActivity
                 case Player.STATE_READY:
                     showProgressBar(false);
                     mIsEnded = false;
+                    if (MusicSession.consumeArmed()) {
+                        getWindow().getDecorView().post(MobilePlaybackActivity.this::minimizeForMusic);
+                    }
                     // CASTING: the TV owns playback while a session is active - the local engine
                     // may load/buffer (so disconnect can resume instantly) but must never audibly
                     // play. Re-pause the moment any (re)load reaches READY.
@@ -4435,6 +4519,9 @@ public class MobilePlaybackActivity extends MobileActivity
                 case Player.STATE_ENDED:
                     showProgressBar(false);
                     mIsEnded = true;
+                    if (mWatchVideoId != null) {
+                        mWatchedIds.add(mWatchVideoId); // played to the end: cache goes when the player closes
+                    }
                     // Surface the replay affordance - but NOT while in PiP: full-size controls would
                     // appear inside the tiny PiP window and onAutoHideTick would keep re-arming them
                     // (mIsEnded stays true), so they'd never hide. In PiP the RemoteAction handles it.
@@ -4458,6 +4545,10 @@ public class MobilePlaybackActivity extends MobileActivity
 
         @Override
         public void onPlayerError(PlaybackException error) {
+            if (mMusicHidden && MusicSession.isArmed()) {
+                MusicSession.end();
+                showAfterMusic();
+            }
             releaseWatchMetadata();
             // Never leave the loading still covering an error state.
             mStillAwaitReady = false;
@@ -8643,6 +8734,7 @@ public class MobilePlaybackActivity extends MobileActivity
         if (item != null && item.videoId != null) {
             SessionWarmup.onPlaybackRequested();
             if (!Helpers.equals(item.videoId, mWatchVideoId)) {
+                noteWatchedProgress(); // the video being left may have been watched to the end
                 cancelClose(); // NEWTUBE(motion): a video picked while Back was closing this player
                 // NEWTUBE(motion): or while a host's X was closing its card - this session goes on.
                 MiniPlayerBridge.cancelClosing();

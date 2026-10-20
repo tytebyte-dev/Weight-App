@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="cache_autoclean">Очищать кэш просмотренных видео</string>
+    <string name="cache_autoclean_summary">После закрытия плеера на досмотренном видео его кэш удаляется. Скачанные видео не затрагиваются.</string>
+    <string name="storage_title">Использование памяти</string>
+    <string name="storage_subtitle">Только собственный кэш приложения. Скачанные видео не учитываются.</string>
+    <string name="storage_video">Видео</string>
+    <string name="storage_images">Картинки</string>
+    <string name="storage_other">Прочее</string>
+    <string name="storage_clear">Очистить кэш %1$s</string>
+    <string name="storage_cleared">Освобождено: %1$s</string>
+    <string name="storage_note">Очищенное загрузится снова, когда понадобится. Видео из вкладки «Скачанные» не затрагиваются.</string>
+    <string name="storage_entry">Использование памяти</string>
+    <string name="storage_entry_summary">Что хранит кэш и как его очистить</string>
+</resources>

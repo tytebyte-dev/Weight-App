@@ -14,6 +14,18 @@
     android:paddingTop="@dimen/mobile_card_spacing"
     tools:visibility="visible">
 
+    <LinearLayout
+        android:id="@+id/skel_cards"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+    <LinearLayout style="@style/MobileSkeletonFeedCard">
+        <View style="@style/MobileSkeletonFeedThumb" />
+        <View style="@style/MobileSkeletonFeedLineWide" />
+        <View style="@style/MobileSkeletonFeedLineNarrow" />
+    </LinearLayout>
+
     <LinearLayout style="@style/MobileSkeletonFeedCard">
         <View style="@style/MobileSkeletonFeedThumb" />
         <View style="@style/MobileSkeletonFeedLineWide" />
@@ -26,10 +38,154 @@
         <View style="@style/MobileSkeletonFeedLineNarrow" />
     </LinearLayout>
 
-    <LinearLayout style="@style/MobileSkeletonFeedCard">
-        <View style="@style/MobileSkeletonFeedThumb" />
-        <View style="@style/MobileSkeletonFeedLineWide" />
-        <View style="@style/MobileSkeletonFeedLineNarrow" />
+    </LinearLayout>
+
+    <!-- Music tab: ghost header (only when the real one is not on screen) + song rows. -->
+    <LinearLayout
+        android:id="@+id/skel_music"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <LinearLayout
+            android:id="@+id/skel_music_header"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingBottom="8dp">
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="44dp"
+                android:layout_marginTop="4dp"
+                android:background="@drawable/bg_skeleton_block" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:orientation="horizontal">
+                <View style="@style/MobileSkeletonMusicChip" />
+                <View style="@style/MobileSkeletonMusicChip" />
+                <View style="@style/MobileSkeletonMusicChip" />
+            </LinearLayout>
+        </LinearLayout>
+        <LinearLayout style="@style/MobileSkeletonMusicRow">
+            <View style="@style/MobileSkeletonMusicArt" />
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
+                android:layout_weight="1"
+                android:orientation="vertical">
+                <View style="@style/MobileSkeletonMusicLineWide" />
+                <View style="@style/MobileSkeletonMusicLineNarrow" />
+            </LinearLayout>
+            <View style="@style/MobileSkeletonMusicTail" />
+        </LinearLayout>
+        <LinearLayout style="@style/MobileSkeletonMusicRow">
+            <View style="@style/MobileSkeletonMusicArt" />
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
+                android:layout_weight="1"
+                android:orientation="vertical">
+                <View style="@style/MobileSkeletonMusicLineWide" />
+                <View style="@style/MobileSkeletonMusicLineNarrow" />
+            </LinearLayout>
+            <View style="@style/MobileSkeletonMusicTail" />
+        </LinearLayout>
+        <LinearLayout style="@style/MobileSkeletonMusicRow">
+            <View style="@style/MobileSkeletonMusicArt" />
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
+                android:layout_weight="1"
+                android:orientation="vertical">
+                <View style="@style/MobileSkeletonMusicLineWide" />
+                <View style="@style/MobileSkeletonMusicLineNarrow" />
+            </LinearLayout>
+            <View style="@style/MobileSkeletonMusicTail" />
+        </LinearLayout>
+        <LinearLayout style="@style/MobileSkeletonMusicRow">
+            <View style="@style/MobileSkeletonMusicArt" />
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
+                android:layout_weight="1"
+                android:orientation="vertical">
+                <View style="@style/MobileSkeletonMusicLineWide" />
+                <View style="@style/MobileSkeletonMusicLineNarrow" />
+            </LinearLayout>
+            <View style="@style/MobileSkeletonMusicTail" />
+        </LinearLayout>
+        <LinearLayout style="@style/MobileSkeletonMusicRow">
+            <View style="@style/MobileSkeletonMusicArt" />
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
+                android:layout_weight="1"
+                android:orientation="vertical">
+                <View style="@style/MobileSkeletonMusicLineWide" />
+                <View style="@style/MobileSkeletonMusicLineNarrow" />
+            </LinearLayout>
+            <View style="@style/MobileSkeletonMusicTail" />
+        </LinearLayout>
+        <LinearLayout style="@style/MobileSkeletonMusicRow">
+            <View style="@style/MobileSkeletonMusicArt" />
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
+                android:layout_weight="1"
+                android:orientation="vertical">
+                <View style="@style/MobileSkeletonMusicLineWide" />
+                <View style="@style/MobileSkeletonMusicLineNarrow" />
+            </LinearLayout>
+            <View style="@style/MobileSkeletonMusicTail" />
+        </LinearLayout>
+        <LinearLayout style="@style/MobileSkeletonMusicRow">
+            <View style="@style/MobileSkeletonMusicArt" />
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
+                android:layout_weight="1"
+                android:orientation="vertical">
+                <View style="@style/MobileSkeletonMusicLineWide" />
+                <View style="@style/MobileSkeletonMusicLineNarrow" />
+            </LinearLayout>
+            <View style="@style/MobileSkeletonMusicTail" />
+        </LinearLayout>
+        <LinearLayout style="@style/MobileSkeletonMusicRow">
+            <View style="@style/MobileSkeletonMusicArt" />
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
+                android:layout_weight="1"
+                android:orientation="vertical">
+                <View style="@style/MobileSkeletonMusicLineWide" />
+                <View style="@style/MobileSkeletonMusicLineNarrow" />
+            </LinearLayout>
+            <View style="@style/MobileSkeletonMusicTail" />
+        </LinearLayout>
+        <LinearLayout style="@style/MobileSkeletonMusicRow">
+            <View style="@style/MobileSkeletonMusicArt" />
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
+                android:layout_weight="1"
+                android:orientation="vertical">
+                <View style="@style/MobileSkeletonMusicLineWide" />
+                <View style="@style/MobileSkeletonMusicLineNarrow" />
+            </LinearLayout>
+            <View style="@style/MobileSkeletonMusicTail" />
+        </LinearLayout>
     </LinearLayout>
 
 </com.newtube.mobile.ui.common.ShimmerLinearLayout>

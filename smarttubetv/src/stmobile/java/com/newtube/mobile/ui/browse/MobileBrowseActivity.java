@@ -74,6 +74,7 @@ import com.newtube.mobile.ui.common.SkeletonReveal;
 import com.newtube.mobile.ui.update.MobileUpdateActivity;
 import com.newtube.mobile.update.AppUpdates;
 import com.newtube.mobile.ui.playback.MiniPlayerBridge;
+import com.newtube.mobile.ui.playback.MusicSession;
 import com.newtube.mobile.ui.playback.PlayerGesturePrefs;
 import com.newtube.mobile.ui.playback.SystemPipBridge;
 
@@ -131,14 +132,14 @@ public class MobileBrowseActivity extends MobileActivity
      */
     private static final int[] PREFERRED_SECTION_IDS = {
             MediaGroup.TYPE_HOME,
+            MediaGroup.TYPE_MUSIC,
             MediaGroup.TYPE_SUBSCRIPTIONS,
-            MediaGroup.TYPE_HISTORY,
             VideoDownloads.SECTION_ID,
     };
     private static final int[] PREFERRED_SECTION_TITLE_RES = {
             R.string.header_home,
+            R.string.header_music,
             R.string.header_subscriptions,
-            R.string.header_history,
             R.string.header_downloads,
     };
 
@@ -264,6 +265,7 @@ public class MobileBrowseActivity extends MobileActivity
         setupYouPanel();
         setupErrorAction();
         setupSearchButton();
+        setupMusicHeader();
         setupCastButton();
 
         mPresenter = BrowsePresenter.instance(this);
@@ -350,6 +352,18 @@ public class MobileBrowseActivity extends MobileActivity
     private void setSkeletonVisible(boolean visible) {
         if (visible) {
             mSkeletonShows++;
+            boolean music = mCurrentSectionId == MediaGroup.TYPE_MUSIC;
+            mFeedSkeleton.findViewById(R.id.skel_cards).setVisibility(music ? View.GONE : View.VISIBLE);
+            mFeedSkeleton.findViewById(R.id.skel_music).setVisibility(music ? View.VISIBLE : View.GONE);
+            boolean realHeader = mMusicHeader != null && mMusicHeader.getVisibility() == View.VISIBLE;
+            mFeedSkeleton.findViewById(R.id.skel_music_header).setVisibility(realHeader ? View.GONE : View.VISIBLE);
+            // The real header stays on screen: the rows start below it.
+            if (mSkeletonBasePadTop < 0) {
+                mSkeletonBasePadTop = mFeedSkeleton.getPaddingTop();
+            }
+            mFeedSkeleton.setPadding(mFeedSkeleton.getPaddingLeft(), mSkeletonBasePadTop
+                    + (music && realHeader ? mMusicHeader.getHeight() : 0),
+                    mFeedSkeleton.getPaddingRight(), mFeedSkeleton.getPaddingBottom());
             mFeedSkeleton.animate().cancel();
             mFeedSkeleton.setAlpha(1f);
             mFeedSkeleton.setVisibility(View.VISIBLE);
@@ -378,6 +392,7 @@ public class MobileBrowseActivity extends MobileActivity
 
     /** Counts skeleton shows, so a reveal waiting for its cards yields to a newer load. */
     private int mSkeletonShows;
+    private int mSkeletonBasePadTop = -1;
 
     // ---------------------------------------------------------------------------------
     // In-app mini-player bar
@@ -490,8 +505,16 @@ public class MobileBrowseActivity extends MobileActivity
         ExoPlayer player = MiniPlayerBridge.getPlayer();
         if (player == null) {
             hideMiniPlayer();
+            hideMusicBar();
             return;
         }
+        if (MusicSession.isMusic()) {
+            // A Music-tab track: no video card, just the compact bar.
+            hideMiniPlayer();
+            showMusicBar(player);
+            return;
+        }
+        hideMusicBar();
 
         // Keep the exact endpoint frame visible while the newly-created TextureView adopts the
         // session SurfaceTexture. Without this, releasing a fully-minimized drag briefly reveals
@@ -833,6 +856,129 @@ public class MobileBrowseActivity extends MobileActivity
      */
     private void setupSearchButton() {
         mSearchButton.setOnClickListener(v -> SearchPresenter.instance(this).startSearch(null));
+        findViewById(R.id.mobile_log_button).setOnClickListener(v ->
+                com.liskovsoft.smartyoutubetv2.common.misc.DiagnosticLog.share(this));
+    }
+
+    // Music tab: search pill + filter chips above the list, shown only while Music is on screen.
+    private View mMusicBar;
+    private android.widget.ImageView mMusicBarArt;
+    private android.widget.TextView mMusicBarTitle;
+    private android.widget.TextView mMusicBarArtist;
+    private ImageButton mMusicBarPlay;
+    private ProgressBar mMusicBarProgress;
+    private String mMusicBarVideoId;
+    private final Runnable mMusicTick = this::onMusicTick;
+    private static final long MUSIC_TICK_MS = 500;
+
+    private View mMusicHeader;
+    private final android.widget.TextView[] mMusicChips = new android.widget.TextView[4];
+
+    private void setupMusicHeader() {
+        mMusicHeader = findViewById(R.id.mobile_music_header);
+        mMusicBar = findViewById(R.id.mobile_music_bar);
+        mMusicBarArt = findViewById(R.id.music_bar_art);
+        mMusicBarTitle = findViewById(R.id.music_bar_title);
+        mMusicBarArtist = findViewById(R.id.music_bar_artist);
+        mMusicBarPlay = findViewById(R.id.music_bar_play);
+        mMusicBarProgress = findViewById(R.id.music_bar_progress);
+        mMusicBar.setOnClickListener(v -> MiniPlayerBridge.expand(this));
+        mMusicBarPlay.setOnClickListener(v -> {
+            ExoPlayer player = MiniPlayerBridge.getPlayer();
+            if (player != null) {
+                player.setPlayWhenReady(!player.getPlayWhenReady());
+                onMusicTick();
+            }
+        });
+        findViewById(R.id.music_bar_next).setOnClickListener(v ->
+                com.liskovsoft.smartyoutubetv2.common.app.presenters.PlaybackPresenter.instance(this).onNextClicked());
+        findViewById(R.id.music_bar_close).setOnClickListener(v -> {
+            MusicSession.end();
+            hideMusicBar();
+            MiniPlayerBridge.close();
+        });
+        com.newtube.mobile.ui.playback.MiniPlayerListInset.attach(mMusicBar, mContentGrid);
+        findViewById(R.id.mobile_music_search).setOnClickListener(v -> SearchPresenter.instance(this).startSearch(null));
+        int[] ids = {R.id.music_chip_all, R.id.music_chip_songs, R.id.music_chip_playlists, R.id.music_chip_artists};
+        for (int i = 0; i < ids.length; i++) {
+            final int filter = i; // VideoCardAdapter.MUSIC_ALL..MUSIC_ARTISTS, in this order
+            mMusicChips[i] = findViewById(ids[i]);
+            mMusicChips[i].setOnClickListener(v -> {
+                mAdapter.setMusicFilter(filter);
+                paintMusicChips(filter);
+            });
+        }
+        paintMusicChips(VideoCardAdapter.MUSIC_ALL);
+    }
+
+    private void showMusicBar(ExoPlayer player) {
+        mMusicBar.animate().cancel();
+        mMusicBar.setAlpha(1f);
+        mMusicBar.setTranslationX(0f);
+        mMusicBar.setVisibility(View.VISIBLE);
+        mMusicBar.bringToFront(); // above the list, never under it
+        mMusicBar.requestLayout();
+        Utils.removeCallbacks(mMusicTick);
+        onMusicTick();
+    }
+
+    private void hideMusicBar() {
+        Utils.removeCallbacks(mMusicTick);
+        if (mMusicBar != null) {
+            mMusicBar.setVisibility(View.GONE);
+        }
+        mMusicBarVideoId = null;
+        if (mAdapter != null) {
+            mAdapter.setNowPlaying(null, false);
+        }
+    }
+
+    private void onMusicTick() {
+        if (mMusicBar == null || mMusicBar.getVisibility() != View.VISIBLE) {
+            return;
+        }
+        ExoPlayer player = MiniPlayerBridge.getPlayer();
+        if (player == null || !MusicSession.isMusic()) {
+            hideMusicBar();
+            return;
+        }
+        Video video = MiniPlayerBridge.getVideo();
+        String id = video != null ? video.videoId : null;
+        if (video != null && !java.util.Objects.equals(id, mMusicBarVideoId)) {
+            mMusicBarVideoId = id;
+            mMusicBarTitle.setText(video.getTitle());
+            CharSequence artist = video.getAuthor();
+            mMusicBarArtist.setText(artist != null && artist.length() > 0 ? artist : video.getSecondTitle());
+            com.bumptech.glide.Glide.with(this).load(video.getCardImageUrl()).centerCrop().into(mMusicBarArt);
+        }
+        long duration = player.getDuration();
+        if (duration > 0) {
+            mMusicBarProgress.setProgress((int) (player.getCurrentPosition() * 1000 / duration));
+        }
+        boolean playing = isMiniActivelyPlaying(player);
+        mMusicBarPlay.setImageResource(player.getPlayWhenReady() ? R.drawable.ic_player_pause : R.drawable.ic_player_play);
+        mAdapter.setNowPlaying(id, playing);
+        Utils.postDelayed(mMusicTick, MUSIC_TICK_MS);
+    }
+
+    private void paintMusicChips(int selected) {
+        for (int i = 0; i < mMusicChips.length; i++) {
+            boolean on = i == selected;
+            mMusicChips[i].setBackgroundResource(on ? R.drawable.bg_music_chip_selected : R.drawable.bg_music_chip);
+            mMusicChips[i].setTextColor(getColor(on ? R.color.mobile_color_background : R.color.mobile_color_on_surface));
+        }
+    }
+
+    /** The Music section is drawn as a song list with its own header; every other section as cards. */
+    private void updateMusicMode(int sectionId) {
+        boolean music = sectionId == MediaGroup.TYPE_MUSIC;
+        if (mMusicHeader != null) {
+            mMusicHeader.setVisibility(music ? View.VISIBLE : View.GONE);
+        }
+        if (mAdapter != null) {
+            mAdapter.setMusicMode(music);
+            paintMusicChips(VideoCardAdapter.MUSIC_ALL);
+        }
     }
 
     // ---------------------------------------------------------------------------------
@@ -1273,6 +1419,7 @@ public class MobileBrowseActivity extends MobileActivity
 
         boolean switched = mCurrentSectionId != sectionId;
         mCurrentSectionId = sectionId;
+        updateMusicMode(sectionId);
         paintCachedSnapshot(sectionId, switched);
         syncNavHighlight(sectionId);
 
@@ -1380,6 +1527,24 @@ public class MobileBrowseActivity extends MobileActivity
         if (download != null && !download.isDone()) {
             DownloadMenu.show(this, download);
             return;
+        }
+
+        // Music tab: a song never opens the player. With a live session the song is handed to it
+        // and only the bar changes; otherwise the player opens invisible and minimizes itself
+        // (MusicSession), leaving the compact music bar.
+        boolean musicTap = mCurrentSectionId == MediaGroup.TYPE_MUSIC && video.videoId != null && !video.isChannel();
+        if (!musicTap) {
+            MusicSession.end(); // an ordinary video replaces any music session
+        }
+        if (musicTap) {
+            if (MiniPlayerBridge.isActive()) {
+                mPresenter.onVideoItemSelected(video);
+                MusicSession.markMusic();
+                com.liskovsoft.smartyoutubetv2.common.app.presenters.PlaybackPresenter.instance(this).onNewVideo(video);
+                syncMiniPlayer();
+                return;
+            }
+            MusicSession.arm();
         }
 
         mPresenter.onVideoItemSelected(video);
@@ -1881,6 +2046,7 @@ public class MobileBrowseActivity extends MobileActivity
 
     @Override
     protected void onPause() {
+        Utils.removeCallbacks(mMusicTick);
         super.onPause();
 
         if (mPresenter != null) {
@@ -2095,6 +2261,7 @@ public class MobileBrowseActivity extends MobileActivity
             hideYouPanel();
             boolean switched = mCurrentSectionId != section.getId();
             mCurrentSectionId = section.getId();
+            updateMusicMode(section.getId());
             paintCachedSnapshot(section.getId(), switched);
 
             // The section may not be one of the sections shown in the bottom nav - e.g. the
