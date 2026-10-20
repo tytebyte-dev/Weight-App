@@ -66,8 +66,8 @@ jobs:
 
       - name: Prepare the signing key
         env:
-          TESTKEY_PK8_B64: ${{ secrets.TESTKEY_PK8_B64 }}
-        run: .github/scripts/setup-signing.sh
+          PK8_B64: ${{ secrets.TESTKEY_PK8_B64 }}
+        run: .github/scripts/setup-signing.sh testkey
 
       - name: Build debug APKs
         run: |

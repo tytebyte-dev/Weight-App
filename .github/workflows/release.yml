@@ -1,6 +1,6 @@
 name: Release
 
-# Release build: signed with signing/testkey.x509.pem, published as a GitHub Release with an
+# Release build: signed with signing/shared.x509.pem, published as a GitHub Release with an
 # automatic tag (v<versionName>, or v<versionName>.<run number> when that tag is taken) and
 # automatic notes: the changes since the previous release plus a link to the full comparison.
 # Run it by hand from the Actions tab.
@@ -70,8 +70,8 @@ jobs:
 
       - name: Prepare the signing key
         env:
-          TESTKEY_PK8_B64: ${{ secrets.TESTKEY_PK8_B64 }}
-        run: .github/scripts/setup-signing.sh
+          PK8_B64: ${{ secrets.SHARED_PK8_B64 }}
+        run: .github/scripts/setup-signing.sh shared
 
       - name: Work out the version and the tag
         id: ver
@@ -103,11 +103,11 @@ jobs:
         run: |
           set -euo pipefail
           apksigner="$(ls "$ANDROID_HOME"/build-tools/*/apksigner | sort -V | tail -n 1)"
-          want="$(openssl x509 -in signing/testkey.x509.pem -noout -fingerprint -sha256 | cut -d= -f2 | tr -d ':' | tr 'A-F' 'a-f')"
+          want="$(openssl x509 -in signing/shared.x509.pem -noout -fingerprint -sha256 | cut -d= -f2 | tr -d ':' | tr 'A-F' 'a-f')"
           for apk in dist/*.apk; do
             got="$("$apksigner" verify --print-certs "$apk" | sed -n 's/.*certificate SHA-256 digest: //p' | head -n 1)"
             if [ "$got" != "$want" ]; then
-              echo "::error::$apk is not signed with signing/testkey.x509.pem ($got)"
+              echo "::error::$apk is not signed with signing/shared.x509.pem ($got)"
               exit 1
             fi
           done
@@ -131,7 +131,7 @@ jobs:
               echo "**Full changelog:** https://github.com/${repo}/compare/${PREV}...${TAG}"
             fi
             echo
-            echo "APKs are signed with the \`signing/testkey.x509.pem\` certificate. Pick the file for your device's ABI (arm64-v8a is right for most phones); \`universal\` runs everywhere."
+            echo "APKs are signed with the \`signing/shared.x509.pem\` certificate. Pick the file for your device's ABI (arm64-v8a is right for most phones); \`universal\` runs everywhere."
           } > notes-head.md
           args=(--target "$GITHUB_SHA" --title "Weight App ${VERSION}" --notes-file notes-head.md --generate-notes)
           if [ -n "$PREV" ]; then args+=(--notes-start-tag "$PREV"); fi
