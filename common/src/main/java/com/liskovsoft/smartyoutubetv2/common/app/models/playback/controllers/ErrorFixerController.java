@@ -79,6 +79,14 @@ public class ErrorFixerController extends BasePlayerController implements OnLong
     // per failing cycle: the video pin goes first, the audio pin on the next failing cycle.
     private boolean mAudioPinRescueArmed;
     private String mAudioPinRescueVideoId;
+    // NEWTUBE(decoder-fallback): a video/audio renderer error (a decoder that failed to init, e.g.
+    // after sleep or with another app holding the codec) used to persist FHD AVC / HQ MP4A as the
+    // user's format, so one transient failure capped every later video. Now the fallback is
+    // session-scoped like the pin rescue: armed for THIS video, re-asserted on our reload (whose
+    // onNewVideo clears the temp formats first), and the next video starts on the user's choice
+    // again (upstream eb3713bd, #6326).
+    private String mVideoDecoderFallbackVideoId;
+    private String mAudioDecoderFallbackVideoId;
     // NEWTUBE(same-position cap): errors recurring at (nearly) the SAME media position count in
     // their own window that onPlay does NOT reset. After a reload most of the replayed span plays
     // from the disk cache, so reaching READY+playing proves nothing about the chunk that killed
@@ -237,6 +245,8 @@ public class ErrorFixerController extends BasePlayerController implements OnLong
             clearPlaybackNotice(); // a different video: the previous one's reason is not this one's
             disposeSwap();
             mSwapNotedVideoId = null;
+            mVideoDecoderFallbackVideoId = null;
+            mAudioDecoderFallbackVideoId = null;
         }
     }
 
@@ -494,14 +504,18 @@ public class ErrorFixerController extends BasePlayerController implements OnLong
             disableSubtitles();
             restartEngine = false;
         } else if (type == PlayerEventListener.ERROR_TYPE_RENDERER && rendererIndex == PlayerEventListener.RENDERER_INDEX_VIDEO) {
-            getPlayerData().setFormat(FormatItem.VIDEO_FHD_AVC_30);
+            getPlayerData().setTempVideoFormat(FormatItem.VIDEO_FHD_AVC_30);
+            mVideoDecoderFallbackVideoId = getVideo() != null ? getVideo().videoId : null;
+            NetPath.log(NetPath.context() + " recovery-decoder-fallback renderer=video to=fhd-avc");
             if (getPlayerTweaksData().isSWDecoderForced()) {
                 getPlayerTweaksData().setSWDecoderForced(false);
             } else {
                 restartEngine = false;
             }
         } else if (type == PlayerEventListener.ERROR_TYPE_RENDERER && rendererIndex == PlayerEventListener.RENDERER_INDEX_AUDIO) {
-            getPlayerData().setFormat(FormatItem.AUDIO_HQ_MP4A);
+            getPlayerData().setTempAudioFormat(FormatItem.AUDIO_HQ_MP4A);
+            mAudioDecoderFallbackVideoId = getVideo() != null ? getVideo().videoId : null;
+            NetPath.log(NetPath.context() + " recovery-decoder-fallback renderer=audio to=mp4a");
             restartEngine = false;
         } else if (type == PlayerEventListener.ERROR_TYPE_UNEXPECTED) {
             // IllegalStateException: Buffer too small (5242880 < 7208383)
@@ -1437,6 +1451,13 @@ public class ErrorFixerController extends BasePlayerController implements OnLong
             // so the selector is free to pick the same-language alternative codec rendition
             // instead of the one concrete itag the persisted pin kept re-selecting.
             getPlayerData().setTempAudioFormat(getPlayerData().getDefaultAudioFormat());
+        }
+        // NEWTUBE(decoder-fallback): after the pin rescue, so a decoder fallback wins over Auto.
+        if (videoId != null && Helpers.equals(videoId, mVideoDecoderFallbackVideoId)) {
+            getPlayerData().setTempVideoFormat(FormatItem.VIDEO_FHD_AVC_30);
+        }
+        if (videoId != null && Helpers.equals(videoId, mAudioDecoderFallbackVideoId)) {
+            getPlayerData().setTempAudioFormat(FormatItem.AUDIO_HQ_MP4A);
         }
     }
 
