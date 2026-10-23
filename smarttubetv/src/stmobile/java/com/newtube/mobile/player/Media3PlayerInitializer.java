@@ -451,6 +451,35 @@ public class Media3PlayerInitializer {
             mSkipOpusPreroll = skipOpusPreroll;
         }
 
+        /**
+         * DEBUG: {@code debug.arc.fail_decoder=video|audio} makes the first few decoder inits of
+         * that type in this process throw, enough to exhaust the decoder fallback list, so the
+         * error fixer's renderer branch can be exercised on an emulator. Kill the app to re-arm.
+         */
+        @Override
+        protected androidx.media3.exoplayer.mediacodec.MediaCodecAdapter.Factory getCodecAdapterFactory() {
+            androidx.media3.exoplayer.mediacodec.MediaCodecAdapter.Factory factory = super.getCodecAdapterFactory();
+            if (!com.liskovsoft.smartyoutubetv2.tv.BuildConfig.DEBUG) {
+                return factory;
+            }
+            String target = DebugMediaShaper.prop("debug.arc.fail_decoder");
+            if (target.isEmpty()) {
+                return factory;
+            }
+            return configuration -> {
+                String mime = configuration.format.sampleMimeType;
+                boolean match = mime != null && mime.startsWith(target + "/");
+                if (match && sDebugDecoderFailuresLeft > 0) {
+                    sDebugDecoderFailuresLeft--;
+                    NetPath.log("debug fail-decoder mime=" + mime + " left=" + sDebugDecoderFailuresLeft);
+                    throw new java.io.IOException("debug.arc.fail_decoder " + mime);
+                }
+                return factory.createAdapter(configuration);
+            };
+        }
+
+        private static int sDebugDecoderFailuresLeft = 4;
+
         @Override
         protected void buildAudioRenderers(Context context, int extensionRendererMode,
                 androidx.media3.exoplayer.mediacodec.MediaCodecSelector mediaCodecSelector,
